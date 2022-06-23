@@ -1,11 +1,15 @@
 #include "Button.hpp"
 #include <Arduino.h>
 
+
+
 Button::Button(String name, uint8_t pin): 
     mName(name),
     mPin(pin),
-    mDebounce(0),
-    mState(false)
+    mLastPinValue(LOW),
+    mLastDebounceTime(0),
+    mLastPushTime(0),
+    mButtonState(ButtonState::OFF)
 {
 }
 
@@ -14,50 +18,49 @@ void Button::setup()
     pinMode(mPin, INPUT);
 }
 
-void Button::update()
+ButtonState Button::getState()
 {
-    boolean up = digitalRead(mPin);
-    if (mState)
+    uint8_t currentPinValue = digitalRead(mPin);
+    if (currentPinValue != mLastPinValue)
     {
-        if (not up)
+        mLastDebounceTime = millis();
+    }
+
+    if ((millis() - mLastDebounceTime) > DEBOUNCE_DELAY)
+    {
+        if (mButtonState == ButtonState::PUSH || mButtonState == ButtonState::LONG_PUSH)
         {
-            ++mDebounce;
-            if (mDebounce >= DEBOUNCE_TRIGGER)
+            mButtonState = ButtonState::OFF;
+        }
+
+        if (mButtonState == ButtonState::OFF && currentPinValue == HIGH)
+        {
+            mLastPushTime = millis();
+            mButtonState = ButtonState::ON;
+        }
+
+        if (mButtonState == ButtonState::ON && currentPinValue == LOW)
+        {
+            if ((millis() - mLastPushTime) > LONG_PUSH_DELAY)
             {
-                Serial.print("[");
-                Serial.print(mName.c_str());
-                Serial.println("] OFF");
-                mState = false;
-                mDebounce = 0;
+                mButtonState = ButtonState::LONG_PUSH;
+            }
+            else
+            {
+                mButtonState = ButtonState::PUSH;
             }
         }
-        else
-        {
-           mDebounce = 0;
-        }
+        
     }
-    else
-    {
-         if (up)
-        {
-            ++mDebounce;
-            if (mDebounce >= DEBOUNCE_TRIGGER)
-            {
-                Serial.print("[");
-                Serial.print(mName.c_str());
-                Serial.println("] ON");
-                mState = true;
-                mDebounce = 0;
-            }
-        }
-        else
-        {
-           mDebounce = 0;
-        }
-    }
+    mLastPinValue = currentPinValue;
+
+    return mButtonState;
 }
 
-bool Button::getState()
+void Button::dumpState()
 {
-    return mState;
+    Serial.print("[");
+    Serial.print(mName);
+    Serial.print("] ");
+    Serial.println((mButtonState == HIGH) ? "On" : "Off");
 }
