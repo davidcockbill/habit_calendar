@@ -4,8 +4,11 @@
 #include <stdint.h>
 #include <Arduino.h>
 
-enum ButtonState { OFF, ON, PUSH, LONG_PUSH };
+#define BUTTON_STATES C(OFF)C(ON)C(PUSH)C(LONG_PUSH)
 
+#define C(x) x,
+enum ButtonState { BUTTON_STATES };
+#undef C
 
 class Button
 {
@@ -27,7 +30,7 @@ public:
   ButtonState getState();
 
 private:
- void dumpState();
+  void changeState(ButtonState buttonState);
 };
 
 #endif

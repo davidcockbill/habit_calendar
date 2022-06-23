@@ -2,29 +2,38 @@
 
 #include "led_matrix.hpp"
 #include "Button.hpp"
+#include "logging.hpp"
 
- enum State { IDLE, TOGGLE, RESET };
 
+#define STATES C(IDLE)C(TOGGLE)C(RESET)
+#define C(x) x,
+enum State { STATES };
+#undef C
+#define C(x) #x,    
+static const char *const STATE_NAME[] = { STATES };
+#undef C
+
+static const Logger LOGGER(Level::INFO);
 static LedMatrix ledMatrix;
-static Button upButton("UP", PIND2);
-static Button downButton("DOWN", PIND3);
-static Button selectButton("SELECT", PIND4);
+static Button upButton("Up", PIND2);
+static Button downButton("Down", PIND3);
+static Button selectButton("Select", PIND4);
 
 void setup()
 {
   Serial.begin(9600);
-  Serial.println("Setup: start");
+  LOGGER.info("Setup: start");
 
-  Serial.println("Setup: buttons");
+  LOGGER.debug("Settting up buttons");
   upButton.setup();
   downButton.setup();
   selectButton.setup();
 
-  Serial.println("Setup: led matrix");
+  LOGGER.debug("Settting up led matrix");
   ledMatrix.configure();
   ledMatrix.begin();
 
-  Serial.println("Setup: done");
+  LOGGER.info("Setup: complete");
 }
 
 void incrementCurrentDay(uint8_t &month, uint8_t &day)
@@ -35,15 +44,23 @@ void incrementCurrentDay(uint8_t &month, uint8_t &day)
   ++day;
   if (day > MAX_DAY)
   {
-    Serial.println("Day wrap");
+    LOGGER.debug("Day wrap");
     day = 0;
     ++month;
     if (month > MAX_MONTH)
     {
-      Serial.println("Month wrap");
+      LOGGER.debug("Month wrap");
       month = 0;
     }
   }
+}
+
+void changeState(State &state, State newState)
+{
+    LOGGER.info("[State] %s -> %s",
+        STATE_NAME[state],
+        STATE_NAME[newState]);
+    state = newState;
 }
 
 void loop()
@@ -53,6 +70,7 @@ void loop()
   static uint8_t currentDay = 0;
   static uint32_t lastMillis = millis();
 
+  uint32_t start = micros();
   ButtonState upButtonState = upButton.getState();
   ButtonState downButtonState = downButton.getState();
   ButtonState selectButtonState = selectButton.getState();
@@ -64,14 +82,14 @@ void loop()
           upButtonState == ButtonState::ON &&
           selectButtonState == ButtonState::ON)
       {
-        state = State::RESET;
+        changeState(state, State::RESET);
       }
 
       if (selectButtonState == ButtonState::PUSH)
       {
         ledMatrix.toggleLED(currentMonth, currentDay);
         lastMillis = millis();
-        state = State::TOGGLE;
+        changeState(state, State::TOGGLE);
       }
       break;
 
@@ -85,7 +103,7 @@ void loop()
       if ((millis() - lastMillis) > 1000)
       {
         incrementCurrentDay(currentMonth, currentDay);
-        state = State::IDLE;
+        changeState(state, State::IDLE);
       }
       break;
 
@@ -97,7 +115,7 @@ void loop()
         currentMonth = 0;
         currentDay = 0;
         ledMatrix.clearAllLEDs();
-        state = State::IDLE;
+        changeState(state, State::IDLE);
       }
       break;
 
@@ -105,5 +123,6 @@ void loop()
       break;
   }
 
-
+  uint32_t duration = micros() - start;
+  LOGGER.trace("Loop completed in %dus", duration);
 }

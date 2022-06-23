@@ -1,7 +1,12 @@
 #include "Button.hpp"
+#include "logging.hpp"
 #include <Arduino.h>
 
+#define C(x) #x,    
+static const char *const BUTTON_STATE_NAME[] = { BUTTON_STATES };
+#undef C
 
+static const Logger LOGGER(Level::DEBUG);
 
 Button::Button(String name, uint8_t pin): 
     mName(name),
@@ -30,37 +35,37 @@ ButtonState Button::getState()
     {
         if (mButtonState == ButtonState::PUSH || mButtonState == ButtonState::LONG_PUSH)
         {
-            mButtonState = ButtonState::OFF;
+            changeState(ButtonState::OFF);
         }
 
         if (mButtonState == ButtonState::OFF && currentPinValue == HIGH)
         {
             mLastPushTime = millis();
-            mButtonState = ButtonState::ON;
+            changeState(ButtonState::ON);
         }
 
         if (mButtonState == ButtonState::ON && currentPinValue == LOW)
         {
             if ((millis() - mLastPushTime) > LONG_PUSH_DELAY)
             {
-                mButtonState = ButtonState::LONG_PUSH;
+                changeState(ButtonState::LONG_PUSH);
             }
             else
             {
-                mButtonState = ButtonState::PUSH;
+                changeState(ButtonState::PUSH);
             }
         }
-        
     }
     mLastPinValue = currentPinValue;
 
     return mButtonState;
 }
 
-void Button::dumpState()
+void Button::changeState(ButtonState buttonState)
 {
-    Serial.print("[");
-    Serial.print(mName);
-    Serial.print("] ");
-    Serial.println((mButtonState == HIGH) ? "On" : "Off");
+    LOGGER.debug("[%s Button] %s -> %s",
+        mName.c_str(),
+        BUTTON_STATE_NAME[mButtonState],
+        BUTTON_STATE_NAME[buttonState]);
+    mButtonState = buttonState;
 }
