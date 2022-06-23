@@ -11,7 +11,7 @@ This is inspired by the
 
 There is an LED matrix: 12 columns (months) x 31 rows (days).
 
-Unlike Simone's Calendar there are only 3 buttons for control (cost and ease of implementation): +(up), -(down)and toggle. 
+Unlike Simone's Calendar there are only 3 buttons for control (cost and ease of implementation): +(up), -(down) and toggle. 
 
 Press the toggle button and the currently selected LED is toggled. You can toggle this selection on/off as many times as you wish; but a certain time after the press if there is no more activity on the button, then the selection moves onto the next day (wrapping to the next month as appropriate).
 
@@ -19,7 +19,7 @@ Unlike Simone's there will be a February the 29th; but as there is no external t
 
 In normal operation, each day the user can just press the toggle button to light the LED for the day. 
 
-If a day is missed the user willl have to move the currently selected position on by a day.
+If a day is missed the user will have to move the currently selected position on by a day.
 
 This is done using the + and - buttons.
 
@@ -51,6 +51,7 @@ Component selection:
 - Each LED should have 10-20mA through them (due to the 220ohm resistors)
 - Each of the 12 BC337 (one per month) should have minimal current through the base due to the 330ohm resistors.
 - The BC337 will potentially be taking 31 times the LED current. This means 31*20mA = 620mA. The transistors were picked as they have an Ic max of 800mA. So should be alright.
+- According to the 74HC595 [datasheet](https://www.ti.com/lit/ds/symlink/sn74hc595.pdf?ts=1655985125243&ref_url=https%253A%252F%252Fwww.google.com%252F), the max current that can be supplied by the outputs is 20mA. I have 12 LEDs (one for each month) hooked up to each output. Due to the multiplexing of the months, only one of these 12 LEDs should be active at a time; so again, it should be alright here.
 
 Note:
 
@@ -64,8 +65,25 @@ I have currently only prototyped this. I built only the first 8 days of January 
 
 Note:
 
-In the prototype there is resistor per LED. This is overkill as
+In the prototype there is resistor per LED. This is overkill as only one LED will be lit at a time due to the month multiplexing. Therefore for the proper thing I am only going to use 31 resistors rather than 365!
+
+## IDE
+
+The Arduino IDE is very basic and cumbersome to use.
+
+I have therefore switched to using Visual Studio Code, with the PlatformIO extension installed.
+
+Therefore the checked in code here is presented in this format rather than the usual *.ino files.
+
+This is worth it purely for the code completion, proper c/c++ syntax highlighting and source code navigation.
+
 ## Software
+
+The code is broken down into the following:
+- main class
+- button class
+- led matrix class
+- logging class (Serial.println(), but with c style formatting)
 
 ### Button class
 
@@ -84,6 +102,12 @@ The three buttons are (-, +, toggle).
 
 The state of the LEDs are stored in the Arduino EEPROM.
 
+I read the following:
+```
+ The internal EEPROM has a lifetime of 100,000 write cycles.
+```
+Assuming I update the EEPROM with every day toggled, then the EEPROM should last 100,000/365 = 274 years!
+
 ### LED Matrix class
 
 Adapted from Simone's equivalent, [here](https://gitlab.com/simonegiertz/the-every-day-calendar/-/tree/master/firmware/libraries/EverydayCalendar).
@@ -100,6 +124,14 @@ of the 74HC595's are used to disable the outputs to the LED's for a certain peri
 The ISR1 uses the SPI library to load up the 6 74HC595 shift register. Simone's code loads the month first (16 bits with a memcpy), then the days (32-bits) a byte at a time. There is some strange rearranging of the bytes in her code which is due to how the shift registers are wired to the physical LED matrix. Not sure whether I will change this so I just memcpy the whole 32-bits; then just wire the physical matrix accordingly.
 
 The rest of the code is pretty self explanatory.
+
+## Backlog
+
+- Break EEPROM storage out from led matrix code
+- Get and set of whole matrix from led matrix
+- Store of led matrix into storage class (decide how often or on which signal)
+- Implement selection button state
+- Build proper hardware
 
 
 
