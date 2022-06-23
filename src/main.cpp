@@ -17,19 +17,19 @@ static const Logger LOGGER(Level::INFO);
 static LedMatrix ledMatrix;
 static Button upButton("Up", PIND2);
 static Button downButton("Down", PIND3);
-static Button selectButton("Select", PIND4);
+static Button toggleButton("Toggle", PIND4);
 
 void setup()
 {
   Serial.begin(9600);
   LOGGER.info("Setup: start");
 
-  LOGGER.debug("Settting up buttons");
+  LOGGER.debug("Setting up buttons");
   upButton.setup();
   downButton.setup();
-  selectButton.setup();
+  toggleButton.setup();
 
-  LOGGER.debug("Settting up led matrix");
+  LOGGER.debug("Setting up led matrix");
   ledMatrix.configure();
   ledMatrix.begin();
 
@@ -73,19 +73,19 @@ void loop()
   uint32_t start = micros();
   ButtonState upButtonState = upButton.getState();
   ButtonState downButtonState = downButton.getState();
-  ButtonState selectButtonState = selectButton.getState();
+  ButtonState toggleButtonState = toggleButton.getState();
 
   switch (state)
   {
     case State::IDLE:
       if (downButtonState == ButtonState::ON &&
           upButtonState == ButtonState::ON &&
-          selectButtonState == ButtonState::ON)
+          toggleButtonState == ButtonState::ON)
       {
         changeState(state, State::RESET);
       }
 
-      if (selectButtonState == ButtonState::PUSH)
+      if (toggleButtonState == ButtonState::PUSH)
       {
         ledMatrix.toggleLED(currentMonth, currentDay);
         lastMillis = millis();
@@ -94,7 +94,7 @@ void loop()
       break;
 
     case State::TOGGLE:
-      if (selectButtonState == ButtonState::PUSH)
+      if (toggleButtonState == ButtonState::PUSH)
       {
         ledMatrix.toggleLED(currentMonth, currentDay);
         lastMillis = millis();
@@ -110,7 +110,7 @@ void loop()
     case State::RESET:
       if (downButtonState == ButtonState::OFF &&
           upButtonState == ButtonState::OFF &&
-          selectButtonState == ButtonState::OFF)
+          toggleButtonState == ButtonState::OFF)
       {
         currentMonth = 0;
         currentDay = 0;
