@@ -23,7 +23,7 @@ If a day is missed the user will have to move the currently selected position on
 
 This is done using the + and - buttons.
 
-On pressing one of these selection button, the LED matrix will change mode and highlight only the currently selected position. The user can then move this forward or backwards using the + or - selection buttons respectively. Pushing and holding for a longer period will move the selection back or forward by a month.
+On pressing one of these selection buttons, the LED matrix will change mode and highlight only the currently selected position. The user can then move this select position forward or backwards using the + or - selection buttons respectively. Pushing and holding for a longer period will move the selection back or forward by a month.
 
 When in selection mode, a period of inactivity on the selection buttons will cause the exit of this state and the LED matrix to be restored.
 
@@ -80,20 +80,21 @@ This is worth it purely for the code completion, proper c/c++ syntax highlightin
 ## Software
 
 The code is broken down into the following:
-- main class
-- button class
-- led matrix class
-- logging class (Serial.println(), but with c style formatting)
+- Main code with Arduino setup() and loop().
+- Button class
+- LED matrix class (self running via timer interrupts)
+- Storage class
+- Logging class
 
 ### Button class
 
 All buttons are debounced for noise.
 
 Each button runs it's own state machine and on read presents one of the following states:
-- OFF
-- ON
-- PUSH
-- LONG_PUSH
+- OFF (button not pressed)
+- ON (button pressed)
+- PUSH (transition from ON to OFF. Short on period)
+- LONG_PUSH (transition from ON to OFF. Long on period)
 
 The three buttons are (-, +, toggle).
 
@@ -124,6 +125,23 @@ of the 74HC595's are used to disable the outputs to the LED's for a certain peri
 The ISR1 uses the SPI library to load up the 6 74HC595 shift register. Simone's code loads the month first (16 bits with a memcpy), then the days (32-bits) a byte at a time. There is some strange rearranging of the bytes in her code which is due to how the shift registers are wired to the physical LED matrix. Not sure whether I will change this so I just memcpy the whole 32-bits; then just wire the physical matrix accordingly.
 
 The rest of the code is pretty self explanatory.
+
+### Logging class
+
+Serial.println() and Serial.print() are painful to use when outputting parameter values. There is also no provision for logging levels. 
+
+An individual Logger class can be instatiated per module with it's own log level.
+
+The Logger methods allow usual printf style % formatting.
+Life is so much easier!
+
+### Main code
+
+The main code has the usual Arduino setup() and loop() functions.
+
+The buttons and led matrix are instantiated and setup here.
+
+The loop() function is reads the button states on each iteration and then goes through a very rudimentary state machine using the button signals for control.
 
 ## Backlog
 
