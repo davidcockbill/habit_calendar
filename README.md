@@ -33,7 +33,7 @@ The LED states will be persisted across a power cycling of the calender.
 
 ## Hardware
 
-- 1 x Arduino Nano
+- 1 x Arduino [Nano](http://ww1.microchip.com/downloads/en/DeviceDoc/ATmega48A-PA-88A-PA-168A-PA-328-P-DS-DS40002061A.pdf)
 - 6 x 74HC595 (shift registers)
 - 400 x yellow 3mmm difused LED's (off ebay)
 - 12 x BC337 (NPN transistors for driving the months)
@@ -51,7 +51,7 @@ Component selection:
 - Each LED should have 10-20mA through them (due to the 220ohm resistors)
 - Each of the 12 BC337 (one per month) should have minimal current through the base due to the 330ohm resistors.
 - The BC337 will potentially be taking 31 times the LED current. This means 31*20mA = 620mA. The transistors were picked as they have an Ic max of 800mA. So should be alright.
-- According to the 74HC595 [datasheet](https://www.ti.com/lit/ds/symlink/sn74hc595.pdf?ts=1655985125243&ref_url=https%253A%252F%252Fwww.google.com%252F), the max current that can be supplied by the outputs is 20mA. I have 12 LEDs (one for each month) hooked up to each output. Due to the multiplexing of the months, only one of these 12 LEDs should be active at a time; so again, it should be alright here.
+- According to the 74HC595 [datasheet](https://www.ti.com/lit/ds/symlink/sn74hc595.pdf?ts=1655985125243), the max current that can be supplied by the outputs is 20mA. I have 12 LEDs (one for each month) hooked up to each output. Due to the multiplexing of the months, only one of these 12 LEDs should be active at a time; so again, it should be alright here.
 
 Note:
 
@@ -117,18 +117,18 @@ This class drives the six 74HC595 shift registers, which are used for setting th
 
 The Arduino Timer2 is used to cause 2 interrupts:
 
-(1) The overflow/wrap of the 256 bit timer causes an iterrupt. Interrupt Service Routine (ISR) code is run as a result of the interrupt which drives the LEDs for a single month. The next timer interrupt causes the next month to be displayed, etc. etc. Even though only one month is being displayed at a time, the persistance of vision makes it look like all months are displayed at once.
+(1) The overflow/wrap of the 256 bit timer causes an interrupt. Interrupt Service Routine (ISR) code is run as a result of the interrupt which drives the LEDs for a single month. The next timer interrupt causes the next month to be displayed, etc. etc. Even though only one month is being displayed at a time, the persistance of vision makes it look like all months are displayed at once.
 
 (2) The other interrupt occurs as a result of a compare register setting for timer 2. This is used for brightness control. Essentially the Output Enable pin(s)
-of the 74HC595's are used to disable the outputs to the LED's for a certain period. The ISR for for the timer overflow (point 1 above) diables the LED output (at timer count 0). The ISR for this interrupt just enables the LED outputs. Therefore by setting the compare register you adjust the duty cycle of the power to the LED's. i.e. if you set the compare to 128 you the LED will be on for half the time for the 256 bit timer.
+of the 74HC595's are used to disable the outputs to the LED's for a certain period. The ISR for for the timer overflow (point 1 above) disables the LED output (at timer count 0). The ISR for this interrupt just enables the LED outputs. Therefore by setting the compare register you adjust the duty cycle of the power to the LED's. i.e. if you set the compare to 128, the LED will be on for half the time of the 256 bit timer.
 
-The ISR1 uses the SPI library to load up the 6 74HC595 shift register. Simone's code loads the month first (16 bits with a memcpy), then the days (32-bits) a byte at a time. There is some strange rearranging of the bytes in her code which is due to how the shift registers are wired to the physical LED matrix. Not sure whether I will change this so I just memcpy the whole 32-bits; then just wire the physical matrix accordingly.
+The ISR1 uses the SPI library to load up the six 74HC595 shift registers. Simone's code loads the month first (16 bits with a memcpy), then the days (32-bits) a byte at a time. There is some strange rearranging of the bytes in her code which is due to how the shift registers are wired to the physical LED matrix. Not sure whether I will change this so I just memcpy the whole 32-bits; then just wire the physical matrix accordingly.
 
 The rest of the code is pretty self explanatory.
 
 ### Logging class
 
-Serial.println() and Serial.print() are painful to use when outputting parameter values. There is also no provision for logging levels. 
+Serial.println() and Serial.print() are painful to use when outputting parameter values. There is also no provision for logging levels, to enable the debugging of specific targeted areas of the code.
 
 An individual Logger class can be instatiated per module with it's own log level.
 
@@ -141,12 +141,12 @@ The main code has the usual Arduino setup() and loop() functions.
 
 The buttons and led matrix are instantiated and setup here.
 
-The loop() function is reads the button states on each iteration and then goes through a very rudimentary state machine using the button signals for control.
+The loop() function reads the button states on each iteration and then goes through a very rudimentary state machine using the button signals for control.
 
 ## Backlog
 
 - Break EEPROM storage out from led matrix code
-- Get and set of whole matrix from led matrix
+- Get and set of matrix snapshot from led matrix
 - Store of led matrix into storage class (decide how often or on which signal)
 - Implement selection button state
 - Build proper hardware
