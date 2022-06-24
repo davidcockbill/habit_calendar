@@ -147,9 +147,11 @@ The loop() function reads the button states on each iteration and then goes thro
 
 ## Backlog
 
+- Fix long button press (it works, but duration is not as expected)
 - Implement selection button state
 - Persist the current month and day to storage to prevent unnessesary scrolling on power cycle.
 - Build proper hardware
+- Increment/decrement  day and month functions need to wrap appropriately for the number of days in a particular month.
 
 
 
