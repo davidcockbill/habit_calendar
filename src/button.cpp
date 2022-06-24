@@ -6,6 +6,8 @@
 static const char *const BUTTON_STATE_NAME[] = { BUTTON_STATES };
 #undef C
 
+static const uint32_t DEBOUNCE_DELAY = 5;
+static const uint32_t LONG_PUSH_DELAY = 250;
 static const Logger LOGGER(Level::DEBUG);
 
 Button::Button(String name, uint8_t pin): 
