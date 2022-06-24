@@ -1,21 +1,22 @@
-#ifndef LED_MATRIX_HPP_
-#define LED_MATRIX_HPP_
+#ifndef _LED_MATRIX_HPP_
+#define _LED_MATRIX_HPP_
 
 #include <stdint.h>
 
-
 class LedMatrix
 {
-public:
-	void configure();
-	void begin();
-	void loadLedStatesFromMemory();
-	void saveLedStatesToMemory();
+private:
+    uint32_t mMatrix[12];
 
-	void setLED(uint8_t month, uint8_t day, bool enable);
-	void toggleLED(uint8_t month, uint8_t day);
-	void clearAllLEDs();
-	void setBrightness(uint8_t brightness);
+public:
+    LedMatrix();
+
+    void clear();
+    void set(uint8_t month, uint8_t day, bool enable);
+    void toggle(uint8_t month, uint8_t day);
+
+    uint32_t getDays(uint8_t month);
+    void setDays(uint8_t month, uint32_t days);
 };
 
 #endif
