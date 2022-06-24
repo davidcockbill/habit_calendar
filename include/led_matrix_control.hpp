@@ -11,7 +11,6 @@ public:
 	void configure();
 	void begin();
 
-	void toggle(uint8_t month, uint8_t day);
 	LedMatrix &getMatrix();
 	
 	void setBrightness(uint8_t brightness);

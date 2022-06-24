@@ -34,11 +34,6 @@ void LedMatrixControl::begin()
     TIMSK2 = (1<<OCIE2A) | (1<<TOIE2); // Enable Timers
 }
 
-void LedMatrixControl::toggle(uint8_t month, uint8_t day)
-{
-    matrix.toggle(month, day);
-}
-
 LedMatrix &LedMatrixControl::getMatrix()
 {
     return matrix;

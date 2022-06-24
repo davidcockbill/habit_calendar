@@ -40,7 +40,9 @@ The LED states will be persisted across a power cycling of the calender.
 - 12 x 330ohm resistors (bias for BC337)
 - 31 x 220ohm resistors (LED current limiting to 10-20mA)
 - 3 x momentary push switches (+, -, select)
-- 3 x 10K resistors (switch pulldowns)
+- 4 x 10K resistors (3 x switch pulldowns, 1 x 74HC595 Output Enable pull up)
+
+The Output Enable is inverted on the 74HC595. This pins on all six chips are connected to an output pin on the Arduino. I originally didn't use a pull up resistor on this. This caused the leds to be randomly set in the array on startup and when uploading code. This is obviously bad as too much current may be drawn from the shift register outputs. Therefore this should not be omitted!
 
 ### Current Concerns
 
@@ -145,10 +147,8 @@ The loop() function reads the button states on each iteration and then goes thro
 
 ## Backlog
 
-- Break EEPROM storage out from led matrix code
-- Get and set of matrix snapshot from led matrix
-- Store of led matrix into storage class (decide how often or on which signal)
 - Implement selection button state
+- Persist the current month and day to storage to prevent unnessesary scrolling on power cycle.
 - Build proper hardware
 
 

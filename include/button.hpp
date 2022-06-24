@@ -13,8 +13,8 @@ enum ButtonState { BUTTON_STATES };
 class Button
 {
 private:
-  static const uint32_t DEBOUNCE_DELAY = 50;
-  static const uint32_t LONG_PUSH_DELAY = 1000;
+  static const uint32_t DEBOUNCE_DELAY = 10;
+  static const uint32_t LONG_PUSH_DELAY = 500;
 
   String mName;
   uint8_t mPin;
