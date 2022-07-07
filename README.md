@@ -69,6 +69,19 @@ Note:
 
 In the prototype there is resistor per LED. This is overkill as only one LED will be lit at a time due to the month multiplexing. Therefore for the proper thing I am only going to use 31 resistors rather than 365!
 
+### Strip Board
+
+Bit of a mess, but moved the prototype to strip board:
+
+![prototype](./images/circuit_1.jpg) 
+
+
+With buttons plugged in:
+
+![prototype](./images/circuit_2.jpg) 
+
+I used sockets for the shift registers and Arduino. This has made the whols thing higher than I expected as I want a low profile frame. We'll see if I ditch these sockets once it is working.
+
 ## IDE
 
 The Arduino IDE is very basic and cumbersome to use.
