@@ -1,11 +1,11 @@
 #include "led_matrix_control.hpp"
 #include "led_matrix.hpp"
+
 #include <Arduino.h>
 #include <SPI.h>
 
-
 static const int SRCLK_PIN = 10;
-static const int OE_PIN = 8;
+static const int OE_PIN = 9;
 static const uint8_t MAX_BRIGHTNESS = 255;
 
 static uint8_t brightness = MAX_BRIGHTNESS/2;
@@ -67,7 +67,7 @@ ISR(TIMER2_OVF_vect)
 {
     static const SPISettings spiSettings(4000000, MSBFIRST, SPI_MODE0);
     static uint8_t currentMonth = 0;
-    static uint8_t spiBuf[2];
+    static uint8_t spiBuf[6];
 
     digitalWrite(OE_PIN, HIGH); // Disable
 
@@ -80,8 +80,12 @@ ISR(TIMER2_OVF_vect)
     digitalWrite (SRCLK_PIN, LOW);
     SPI.beginTransaction(spiSettings);
 
-    spiBuf[0] = month;
-    spiBuf[1] = (uint8_t)(days >> 0 & 0x000000FF);
+    spiBuf[0] = (uint8_t)(month >> 8 & 0x00FF);
+    spiBuf[1] = (uint8_t)(month >> 0 & 0x00FF);
+    spiBuf[2] = (uint8_t)(days >> 24 & 0x000000FF);
+    spiBuf[3] = (uint8_t)(days >> 16 & 0x000000FF);
+    spiBuf[4] = (uint8_t)(days >> 8 & 0x000000FF);
+    spiBuf[5] = (uint8_t)(days >> 0 & 0x000000FF);
 
     SPI.transfer(spiBuf, sizeof(spiBuf));
     SPI.endTransaction();

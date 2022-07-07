@@ -14,14 +14,16 @@ enum State { STATES };
 static const char *const STATE_NAME[] = { STATES };
 #undef C
 
+static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
 static const uint32_t STATE_REVERT_DELAY = 1000;
-static const uint8_t MAX_DAY = 7;
-static const uint8_t MAX_MONTH = 1;
+// static const uint8_t MAX_DAY = 30;
+static const uint8_t MAX_MONTH = 11;
 static const Logger LOGGER(Level::INFO);
 static LedMatrixControl ledMatrixControl;
 static Storage storage;
-static Button upButton("Up", PIND2);
-static Button downButton("Down", PIND3);
+static Button upButton("Up", PIND3);
+static Button downButton("Down", PIND2);
 static Button toggleButton("Toggle", PIND4);
 
 void setup()
@@ -55,7 +57,8 @@ void incrementCurrentMonth(uint8_t &month)
 void incrementCurrentDay(uint8_t &month, uint8_t &day)
 {
     ++day;
-    if (day > MAX_DAY)
+    const uint32_t maxDay = DAYS_IN_MONTH[month] - 1;
+    if (day > maxDay)
     {
         LOGGER.debug("Day wrap");
         day = 0;
@@ -81,7 +84,8 @@ void decrementCurrentDay(uint8_t &month, uint8_t &day)
     if (day == 0)
     {
         LOGGER.debug("Day wrap");
-        day = MAX_DAY;
+        const uint32_t maxDay = DAYS_IN_MONTH[month] - 1;
+        day = maxDay;
         decrementCurrentMonth(month);
     }
     else
@@ -128,10 +132,10 @@ void loop()
                 changeState(state, State::TOGGLE);
             }
 
-            if (upButtonState == ButtonState::ON || 
-                upButtonState == ButtonState::ON ||
-                downButtonState == ButtonState::ON || 
-                downButtonState == ButtonState::ON)
+            if (upButtonState == ButtonState::PUSH || 
+                upButtonState == ButtonState::LONG_PUSH ||
+                downButtonState == ButtonState::PUSH || 
+                downButtonState == ButtonState::LONG_PUSH)
             {
                 matrixSnapshot = ledMatrixControl.getMatrix();
                 lastMillis = millis();
@@ -152,6 +156,7 @@ void loop()
             if ((millis() - lastMillis) > STATE_REVERT_DELAY)
             {
                 incrementCurrentDay(currentMonth, currentDay);
+                LOGGER.info("Month=%d, Day=%d", currentMonth, currentDay);
                 changeState(state, State::IDLE);
             }
             break;
@@ -194,6 +199,7 @@ void loop()
             if ((millis() - lastMillis) > STATE_REVERT_DELAY)
             {
                 ledMatrixControl.getMatrix() = matrixSnapshot;
+                LOGGER.info("Month=%d, Day=%d", currentMonth, currentDay);
                 changeState(state, State::IDLE);
             }
             break;
