@@ -12,6 +12,8 @@ public:
 
 	void saveMatrixToMemory(LedMatrix matrix);
 	void loadMatrixFromMemory(LedMatrix &matrix);
+	void saveCurrentDayToMemory(uint8_t currentMonth, uint8_t currrentDay);
+	void loadCurrentDayFromMemory(uint8_t &currentMonth, uint8_t &currrentDay);
 };
 
 #endif

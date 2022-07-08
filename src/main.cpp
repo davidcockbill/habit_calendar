@@ -17,10 +17,11 @@ static const char *const STATE_NAME[] = { STATES };
 static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 static const uint32_t STATE_REVERT_DELAY = 1000;
-// static const uint8_t MAX_DAY = 30;
 static const uint8_t MAX_MONTH = 11;
 static const Logger LOGGER(Level::INFO);
 static LedMatrixControl ledMatrixControl;
+static uint8_t currentMonth = 0;
+static uint8_t currentDay = 0;
 static Storage storage;
 static Button upButton("Up", PIND3);
 static Button downButton("Down", PIND2);
@@ -40,6 +41,7 @@ void setup()
     ledMatrixControl.configure();
     ledMatrixControl.begin();
     storage.loadMatrixFromMemory(ledMatrixControl.getMatrix());
+    storage.loadCurrentDayFromMemory(currentMonth, currentDay);
 
     LOGGER.info("Setup: complete");
 }
@@ -105,8 +107,6 @@ void changeState(State &state, State newState)
 void loop()
 {
     static State state = State::IDLE;
-    static uint8_t currentMonth = 0;
-    static uint8_t currentDay = 0;
     static uint32_t lastMillis = millis();
     static LedMatrix matrixSnapshot;
 
@@ -150,13 +150,14 @@ void loop()
             {
                 ledMatrixControl.getMatrix().toggle(currentMonth, currentDay);
                 lastMillis = millis();
-                storage.saveMatrixToMemory(ledMatrixControl.getMatrix());
             }
 
             if ((millis() - lastMillis) > STATE_REVERT_DELAY)
             {
                 incrementCurrentDay(currentMonth, currentDay);
                 LOGGER.info("Month=%d, Day=%d", currentMonth, currentDay);
+                storage.saveMatrixToMemory(ledMatrixControl.getMatrix());
+                storage.saveCurrentDayToMemory(currentMonth, currentDay);
                 changeState(state, State::IDLE);
             }
             break;
@@ -200,6 +201,7 @@ void loop()
             {
                 ledMatrixControl.getMatrix() = matrixSnapshot;
                 LOGGER.info("Month=%d, Day=%d", currentMonth, currentDay);
+                storage.saveCurrentDayToMemory(currentMonth, currentDay);
                 changeState(state, State::IDLE);
             }
             break;
@@ -212,6 +214,8 @@ void loop()
                 currentMonth = 0;
                 currentDay = 0;
                 ledMatrixControl.getMatrix().clear();
+                storage.saveMatrixToMemory(ledMatrixControl.getMatrix());
+                storage.saveCurrentDayToMemory(currentMonth, currentDay);
                 changeState(state, State::IDLE);
             }
             break;
