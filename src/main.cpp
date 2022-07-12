@@ -15,9 +15,9 @@ static const char *const STATE_NAME[] = { STATES };
 #undef C
 
 static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static const uint8_t MAX_MONTH = 11;
 
 static const uint32_t STATE_REVERT_DELAY = 1000;
-static const uint8_t MAX_MONTH = 11;
 static const Logger LOGGER(Level::INFO);
 static LedMatrixControl ledMatrixControl;
 static uint8_t currentMonth = 0;
@@ -132,10 +132,8 @@ void loop()
                 changeState(state, State::TOGGLE);
             }
 
-            if (upButtonState == ButtonState::PUSH || 
-                upButtonState == ButtonState::LONG_PUSH ||
-                downButtonState == ButtonState::PUSH || 
-                downButtonState == ButtonState::LONG_PUSH)
+            if (upButtonState == ButtonState::ON || 
+                downButtonState == ButtonState::ON)
             {
                 matrixSnapshot = ledMatrixControl.getMatrix();
                 lastMillis = millis();
@@ -163,6 +161,13 @@ void loop()
             break;
 
         case State::SELECT:
+            if (downButtonState == ButtonState::ON &&
+                upButtonState == ButtonState::ON &&
+                toggleButtonState == ButtonState::ON)
+            {
+                changeState(state, State::RESET);
+            }
+
             if (upButtonState != ButtonState::OFF ||
                 downButtonState != ButtonState::OFF)
             {
