@@ -86,9 +86,9 @@ void decrementCurrentDay(uint8_t &month, uint8_t &day)
     if (day == 0)
     {
         LOGGER.debug("Day wrap");
+        decrementCurrentMonth(month);
         const uint32_t maxDay = DAYS_IN_MONTH[month] - 1;
         day = maxDay;
-        decrementCurrentMonth(month);
     }
     else
     {
