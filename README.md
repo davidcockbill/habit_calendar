@@ -59,28 +59,12 @@ Note:
 
 From prototyping, the currents described above were as expected when empirically read from a multimeter. This was until I added the Arduino control, which refreshes the LEDs on a monthly basis. In this case the current read on my multimeter was 1/12 of expected. I don't know how to interpret this. Maybe my multimeter was averaging the current, and the components were still experiencing the expected full current at a particular moment in time!
 
-### Prototype
+### Building the Calendar
 
-I have currently only prototyped this. I built only the first 8 days of January and February:
+Current state of play is this:
 
-![prototype](./images/prototype.jpg) 
-
-Note:
-
-In the prototype there is resistor per LED. This is overkill as only one LED will be lit at a time due to the month multiplexing. Therefore for the proper thing I am only going to use 31 resistors rather than 365!
-
-### Strip Board
-
-Bit of a mess, but moved the prototype to strip board:
-
-![prototype](./images/circuit_1.jpg) 
-
-
-With buttons plugged in:
-
-![prototype](./images/circuit_2.jpg) 
-
-I used sockets for the shift registers and Arduino. This has made the whols thing higher than I expected as I want a low profile frame. We'll see if I ditch these sockets once it is working.
+![testing first matrix](./documentation/images/prototype_front_panel.jpg) 
+See how the calendar build is going [here](./documentation/README.md).
 
 ## IDE
 
@@ -160,10 +144,9 @@ The loop() function reads the button states on each iteration and then goes thro
 
 ## Backlog
 
-- Implement selection button state
-- Persist the current month and day to storage to prevent unnessesary scrolling on power cycle.
+- Document prototyping process.
 - Build proper hardware
-- Increment/decrement  day and month functions need to wrap appropriately for the number of days in a particular month.
+- Maybe create StateContext class to encapsulate buttons, current day/month, matrix and storage.
 
 
 

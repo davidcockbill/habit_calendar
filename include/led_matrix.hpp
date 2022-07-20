@@ -11,7 +11,9 @@ private:
 public:
     LedMatrix();
 
+    void all();
     void clear();
+
     void set(uint8_t month, uint8_t day, bool enable);
     void toggle(uint8_t month, uint8_t day);
 
