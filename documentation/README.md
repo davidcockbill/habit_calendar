@@ -21,13 +21,17 @@ With buttons plugged in:
 
 ![prototype](./images/circuit_2.jpg) 
 
-I used sockets for the shift registers and Arduino. This has made the whols thing higher than I expected as I want a low profile frame. We'll see if I ditch these sockets once it is working.
+I used sockets for the shift registers and Arduino. This has made the whole thing higher than I expected as I want a low profile frame. We'll see if I ditch these sockets once it is working.
 
 Testing:
 
 ![prototype](./images/testing_strip_board.jpg) 
 
-Note that you can see me trying to add numbers (31 in this case) to the panel lenses. I've given up on this as the results were not very good.
+Note: You can see me trying to add numbers (31 in this case) to the panel lenses. I 3D printed the number on the inside of the lens, airbrushed black into the embossed number, then sandpapered the back to show the black inside the embossed number. I've given up on this as the results were poor.
+
+In light of the above, I need to work out a way of displaying the numbers. However, I like the idea of having no numbers or months, and showing the current selection on a little display, like [this](https://thepihut.com/products/0-91-oled-display-module):
+
+This would sit next to the buttons.
 
 ## Matrix Build
 

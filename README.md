@@ -64,6 +64,7 @@ From prototyping, the currents described above were as expected when empirically
 Current state of play is this:
 
 ![testing first matrix](./documentation/images/prototype_front_panel.jpg) 
+
 See how the calendar build is going [here](./documentation/README.md).
 
 ## IDE
