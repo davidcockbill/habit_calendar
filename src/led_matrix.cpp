@@ -9,7 +9,7 @@ LedMatrix::LedMatrix(): mMatrix{0}
 
 void LedMatrix::all()
 {
-    memset(mMatrix, 1, sizeof(mMatrix));
+    memset(mMatrix, 0xFFFFFFFF, sizeof(mMatrix));
 }
 
 void LedMatrix::clear()

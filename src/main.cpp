@@ -4,6 +4,7 @@
 #include "button.hpp"
 #include "logging.hpp"
 #include "storage.hpp"
+#include "animate.hpp"
 
 
 #define STATES C(IDLE)C(TOGGLE)C(SELECT)C(RESET)
@@ -14,7 +15,8 @@ enum State { STATES };
 static const char *const STATE_NAME[] = { STATES };
 #undef C
 
-static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+// static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static const uint8_t DAYS_IN_MONTH[] = {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
 static const uint8_t MAX_MONTH = 11;
 
 static const uint32_t STATE_REVERT_DELAY = 1000;
@@ -216,6 +218,7 @@ void loop()
                 upButtonState == ButtonState::OFF &&
                 toggleButtonState == ButtonState::OFF)
             {
+                Animate().animate(ledMatrixControl.getMatrix());
                 currentMonth = 0;
                 currentDay = 0;
                 ledMatrixControl.getMatrix().clear();

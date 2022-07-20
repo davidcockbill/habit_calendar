@@ -49,7 +49,7 @@ Here is the test of the first panel:
 
 I have ordered a couple of 440(H)x220(W)x3(D) coloured acrylic sheets from [here](https://www.sheetplastics.co.uk), to be the front panel.
 
-This will have 8mm holess drilled to accept the day lenses
+This will have 8mm holes drilled to accept the day lenses
 
 ### Front Panel Day Lenses
 
