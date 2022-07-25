@@ -13,7 +13,8 @@ public:
 
 	LedMatrix &getMatrix();
 	
-	void setBrightness(uint8_t brightness);
+	void incrementBrightness();
+	void decrementBrightness();
 };
 
 #endif

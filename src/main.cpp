@@ -119,6 +119,18 @@ void loop()
     switch (state)
     {
         case State::IDLE:
+            if (upButtonState == ButtonState::PUSH &&
+                toggleButtonState == ButtonState::ON)
+            {
+                ledMatrixControl.incrementBrightness();
+            }
+
+            if (downButtonState == ButtonState::PUSH &&
+                toggleButtonState == ButtonState::ON)
+            {
+                ledMatrixControl.decrementBrightness();
+            }
+
             if (downButtonState == ButtonState::ON &&
                 upButtonState == ButtonState::ON &&
                 toggleButtonState == ButtonState::ON)
@@ -133,8 +145,8 @@ void loop()
                 changeState(state, State::TOGGLE);
             }
 
-            if (upButtonState == ButtonState::ON || 
-                downButtonState == ButtonState::ON)
+            if (toggleButtonState != ButtonState::ON && (upButtonState == ButtonState::ON || 
+                downButtonState == ButtonState::ON))
             {
                 matrixSnapshot = ledMatrixControl.getMatrix();
                 lastMillis = millis();

@@ -1,14 +1,18 @@
 #include "led_matrix_control.hpp"
 #include "led_matrix.hpp"
+#include "logging.hpp"
 
 #include <Arduino.h>
 #include <SPI.h>
 
+static const Logger LOGGER(Level::INFO);
 static const int SRCLK_PIN = 10;
 static const int OE_PIN = 9;
-static const uint8_t MAX_BRIGHTNESS = 255;
+static const uint8_t MAX_BRIGHTNESS = 254;
+static const uint8_t BRIGHTNESS_VALUES[] = {0, 10, 30, 60, 100, 128, 180, 254};
+static const uint8_t MAX_BRIGHTNESS_IDX = (sizeof(BRIGHTNESS_VALUES) / sizeof(BRIGHTNESS_VALUES[0])) - 1;
 
-static uint8_t brightness = MAX_BRIGHTNESS/2;
+static uint8_t brightness_idx = MAX_BRIGHTNESS_IDX/2;
 static LedMatrix matrix;
 
 void LedMatrixControl::configure()
@@ -24,7 +28,7 @@ void LedMatrixControl::configure()
     TCCR2A = (TCCR2A & ~0x03) | 0x00;
     TCCR2B = (TCCR2B & ~0x08) | 0x00;
     TCCR2B = (TCCR2B & ~0x07) | 0x04; // clock prescaler of 64
-    OCR2A = brightness;
+    OCR2A = ~(BRIGHTNESS_VALUES[brightness_idx]);
 
     matrix.clear();
 }
@@ -39,20 +43,36 @@ LedMatrix &LedMatrixControl::getMatrix()
     return matrix;
 }
 
-void LedMatrixControl::setBrightness(uint8_t b)
+void logBrightness()
 {
-    if (b > 200)
-    {
-        b = 200;
-    }
+    LOGGER.info("Brightness[%d]: %d", brightness_idx, BRIGHTNESS_VALUES[brightness_idx]);
+}
 
-    b = ~b;
-    if ((brightness == 255) && (b != 255))
+void LedMatrixControl::incrementBrightness()
+{
+    if (brightness_idx < MAX_BRIGHTNESS_IDX)
+    {
+        ++brightness_idx;
+    }
+    logBrightness();
+
+    // Turn on brightness interrupt
+    if (brightness_idx > 0)
     {
         TIMSK2 |= (1<<OCIE2A);
     }
-    brightness = b;
-    if (brightness == 255)
+}
+
+void LedMatrixControl::decrementBrightness()
+{
+    if (brightness_idx > 0)
+    {
+        --brightness_idx;
+    }
+    logBrightness();
+
+    // Turn off brightness interrupt
+    if (brightness_idx == 0)
     {
         TIMSK2 &= ~(1<<OCIE2A);
     }
@@ -71,7 +91,7 @@ ISR(TIMER2_OVF_vect)
 
     digitalWrite(OE_PIN, HIGH); // Disable
 
-    OCR2A = brightness;
+    OCR2A = ~(BRIGHTNESS_VALUES[brightness_idx]);
 
     uint16_t month = (1 << currentMonth);
     uint32_t days = matrix.getDays(currentMonth);

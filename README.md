@@ -23,11 +23,12 @@ If a day is missed the user will have to move the currently selected position on
 
 This is done using the + and - buttons.
 
-On pressing one of these selection buttons, the LED matrix will change mode and highlight only the currently selected position. The user can then move this select position forward or backwards using the + or - selection buttons respectively. Pushing and holding for a longer period will move the selection back or forward by a month.
+On pressing one of these selection buttons, the LED matrix will change to select mode and highlight only the currently selected position. The user can then move this select position forward or backwards using the + or - selection buttons respectively. Pushing and holding for a longer period will move the selection back or forward by a month.
 
 When in selection mode, a period of inactivity on the selection buttons will cause the exit of this state and the LED matrix to be restored.
 
 To reset all LEDs (to off), press all buttons at once.
+To change the LED brightness hold the toggle button and short press either the + or - buttions
 
 The LED states will be persisted across a power cycling of the calender.
 
