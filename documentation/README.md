@@ -35,15 +35,24 @@ This would sit next to the buttons.
 
 ## Matrix Build
 
-The LED matrix is 3D printed to provide the appropriate spacing.
+The LED matrix is 3D printed to provide the appropriate spacing. This was knocked up using Fusion 360.
 
-I put a cup around each matrix to hopefully prevent light bleed between days.
+I modelled a cup around each matrix to hopefully prevent light bleed between days.
 
 Due to printer constraints (physical size and the fact that prints kept failing with larger prints), I have split the whole matrix into 4 panels of 12 month x 8 days.
 
 Here is the test of the first panel:
 
-![testing first matrix](./images/testing_first_matrix.jpg) 
+![testing first matrix](./images/testing_first_matrix.jpg)
+
+
+The matrix panels are glued together, using some float glass and the room skirting to ensure all is square:
+![gluing panels](./images/gluing_panels.jpg)
+
+It's actually a bit of a marathon to solder up all the panels. Here I am finishing the last one:
+
+![finish_last_panel](./images/finish_last_panel.jpg)
+
 
 ## Front Panel
 

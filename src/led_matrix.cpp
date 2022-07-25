@@ -9,7 +9,7 @@ LedMatrix::LedMatrix(): mMatrix{0}
 
 void LedMatrix::all()
 {
-    memset(mMatrix, 0xFFFFFFFF, sizeof(mMatrix));
+    memset(mMatrix, 0xFF, sizeof(mMatrix));
 }
 
 void LedMatrix::clear()
@@ -19,7 +19,7 @@ void LedMatrix::clear()
 
 void LedMatrix::set(uint8_t month, uint8_t day, bool enable)
 {
-    if (month <= 11 && day <= 30)
+    if (month <= 11 && day <= 31)
     {
         if (enable)
         {
