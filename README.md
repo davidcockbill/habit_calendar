@@ -7,6 +7,14 @@ A visual calendar to monitor daily habits. For example to track how often you ha
 This is inspired by the 
 [Everyday Calendar](https://gitlab.com/simonegiertz/the-every-day-calendar) by Simone Giertz. In fact the LED matrix code has been adapted from that project.
 
+Current state of play is this:
+
+![finally functional](./documentation/images/functional.jpg) 
+
+See how the calendar build is going [here](./documentation/README.md).
+
+Fusion 360 models [here](./documentation/fusion360/README.md).
+
 ## Operation
 
 There is an LED matrix: 12 columns (months) x 31 rows (days).
@@ -59,16 +67,6 @@ Component selection:
 Note:
 
 From prototyping, the currents described above were as expected when empirically read from a multimeter. This was until I added the Arduino control, which refreshes the LEDs on a monthly basis. In this case the current read on my multimeter was 1/12 of expected. I don't know how to interpret this. Maybe my multimeter was averaging the current, and the components were still experiencing the expected full current at a particular moment in time!
-
-### Building the Calendar
-
-Current state of play is this:
-
-![finally functional](./documentation/images/functional.jpg) 
-
-See how the calendar build is going [here](./documentation/README.md).
-
-Fusion 360 models [here](./documentation/fusion360/README.md).
 
 
 ## IDE
