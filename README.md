@@ -64,9 +64,12 @@ From prototyping, the currents described above were as expected when empirically
 
 Current state of play is this:
 
-![testing first matrix](./documentation/images/prototype_front_panel.jpg) 
+![finally functional](./documentation/images/functional.jpg) 
 
 See how the calendar build is going [here](./documentation/README.md).
+
+Fusion 360 models [here](./documentation/fusion360/README.md).
+
 
 ## IDE
 
