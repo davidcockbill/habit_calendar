@@ -90,7 +90,7 @@ I picked a black aluminuum sheet for the back plate, and a green acrylic sheet f
 The black aluminium is what I have screwed all the components to.
 
 
-This will have 8mm holes drilled to accept the day lenses
+The green acrylic sheet will have 8mm holes drilled to accept the day lenses
 
 ### Front Panel Day Lenses
 
