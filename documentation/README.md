@@ -48,15 +48,25 @@ The final result:
 ![circuit components](./images/circuit_components.jpg)
 
 A: Pull downs for switches
+
 B: 12 transistors for controlling months
+
 C: Shift register for months 9-12
+
 D: Shift register for months 1-8
+
 E: Arduino Nano
+
 F: Button Panel
+
 G: Shift register for days 1-8
+
 H: Shift register for days 9-16
+
 I: Shift register for days 17-24
+
 J: Shift register for days 25-32
+
 
 ## Matrix Build
 
