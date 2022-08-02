@@ -39,9 +39,24 @@ The first stripboard was too big to fit under the LED matrix, which meant either
 
 I decided I didn't want to do this, so the only other option was to distribute the electronics around the edge of the matrix.
 
-![finally functional](./images/distributed_circuit.jpg) 
+![distributed circuit](./images/distributed_circuit.jpg) 
 
 Switching this out was also nice as I bought cheap stripboard, for the first board, which was only 1mm thick. It warped like crazy when soldering onto it. The tracks also kept lifting; which I thought was my bad technique and having the soldering iron too hot. The new smaller stripboards were a joy to solder in comparison. The lesson learned - don't cheap out!
+
+The final result:
+
+![circuit components](./images/circuit_components.jpg)
+
+A: Pull downs for switches
+B: 12 transistors for controlling months
+C: Shift register for months 9-12
+D: Shift register for months 1-8
+E: Arduino Nano
+F: Button Panel
+G: Shift register for days 1-8
+H: Shift register for days 9-16
+I: Shift register for days 17-24
+J: Shift register for days 25-32
 
 ## Matrix Build
 
@@ -72,8 +87,7 @@ The Habit Calendar is functional:
 
 ![installed](./images/installed.jpg) 
 
-
-![finally functional](./images/functional.jpg)
+Notice that some rows are super bright. I discovered that I hadn't done a good job of cutting the tracks on the stripboard for those rows, so the resistors were effectively shorted. Fixed with a craft knife!
 
 I actually quite like this look; but the idea is to finish it off properly! 
 
