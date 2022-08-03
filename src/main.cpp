@@ -20,6 +20,22 @@ static const uint8_t MAX_MONTH = 11;
 
 static const uint32_t STATE_REVERT_DELAY = 1000;
 static const Logger LOGGER(Level::INFO);
+
+static const boolean RESTORE_SNAPSHOT_ON_RESET = false;
+static uint32_t MATRIX_SNAPSHOT[12] = {
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000006,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000};
+
 static LedMatrixControl ledMatrixControl;
 static uint8_t currentMonth = 0;
 static uint8_t currentDay = 0;
@@ -46,6 +62,8 @@ void setup()
 
     storage.loadMatrixFromMemory(ledMatrixControl.getMatrix());
     storage.loadCurrentDayFromMemory(currentMonth, currentDay);
+
+    ledMatrixControl.getMatrix().snapshot();
 
     LOGGER.info("Setup: complete");
 }
@@ -98,6 +116,25 @@ void decrementCurrentDay(uint8_t &month, uint8_t &day)
     {
         --day;
     }
+}
+
+void reset()
+{
+    Animate().animate(ledMatrixControl.getMatrix());
+    currentMonth = 0;
+    currentDay = 0;
+
+    if (RESTORE_SNAPSHOT_ON_RESET)
+    {
+        ledMatrixControl.getMatrix().set(MATRIX_SNAPSHOT);
+    }
+    else
+    {
+        ledMatrixControl.getMatrix().clear();
+    }
+    
+    storage.saveMatrixToMemory(ledMatrixControl.getMatrix());
+    storage.saveCurrentDayToMemory(currentMonth, currentDay);
 }
 
 void changeState(State &state, State newState)
@@ -232,12 +269,7 @@ void loop()
                 upButtonState == ButtonState::OFF &&
                 toggleButtonState == ButtonState::OFF)
             {
-                Animate().animate(ledMatrixControl.getMatrix());
-                currentMonth = 0;
-                currentDay = 0;
-                ledMatrixControl.getMatrix().clear();
-                storage.saveMatrixToMemory(ledMatrixControl.getMatrix());
-                storage.saveCurrentDayToMemory(currentMonth, currentDay);
+                reset();
                 changeState(state, State::IDLE);
             }
             break;

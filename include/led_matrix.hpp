@@ -14,11 +14,14 @@ public:
     void all();
     void clear();
 
+    void set(uint32_t values[12]);
     void set(uint8_t month, uint8_t day, bool enable);
     void toggle(uint8_t month, uint8_t day);
 
     uint32_t getDays(uint8_t month);
     void setDays(uint8_t month, uint32_t days);
+
+    void snapshot();
 };
 
 #endif

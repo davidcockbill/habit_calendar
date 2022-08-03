@@ -38,7 +38,7 @@ void Storage::loadMatrixFromMemory(LedMatrix &matrix)
             days |= (uint32_t)value << (byte * 8);
         }
 
-        LOGGER.info("month=%02d, days=0x%08lx", month, days);
+        LOGGER.debug("month=%02d, days=0x%08lx", month, days);
         matrix.setDays(month, days);
     }
 }
