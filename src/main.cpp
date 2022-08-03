@@ -41,6 +41,9 @@ void setup()
     LOGGER.debug("Setting up led matrix controller");
     ledMatrixControl.configure();
     ledMatrixControl.begin();
+    
+    Animate().animate(ledMatrixControl.getMatrix());
+
     storage.loadMatrixFromMemory(ledMatrixControl.getMatrix());
     storage.loadCurrentDayFromMemory(currentMonth, currentDay);
 
