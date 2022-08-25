@@ -120,17 +120,18 @@ The green acrylic sheet will have 8mm holes drilled to accept the day lenses.
 Note: I also ordered a spare grey acrylic sheet for practice drilling.
 
 I set up a drill jig to ensure that the holes look lined up. The clamped yellow spirit level is used as a straight edge to slide the panel up; meaning that I only have to deal with lining up on a single axis rather than two:
+
 ![drill jig](./images/front_panel_drill_jig.jpg)
 
 Practice drilling holes on spare grey acrylic panel:
+
 ![drill progress](./images/front_panel_progress.jpg)
 
 Drilling took a **lot** of time, to the point where I may just stick with the grey practice acrylic rather than the green.
 
-Here is the result (currently held on with blu-tack)
+Here is the result (currently held on with blu-tack):
+
 ![mockup](./images/front_panel_mockup.jpg)
-
-
 
 ### Front Panel Day Lenses
 
