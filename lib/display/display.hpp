@@ -1,7 +1,18 @@
-#ifndef __DISPLAY_HPP
-#define __DISPLAY_HPP
+#ifndef _DISPLAY_HPP_
+#define _DISPLAY_HPP_
 
-int initialiseDisplay();
-void displayWrite(const char *fmt, ...);
-void displayClear();
-#endif 
+#include "OLED_Driver.h"
+
+class Display
+{
+private:
+    uint8_t mImageCache[IMAGE_SIZE];
+
+public:
+    void configure();
+
+    void write(const char *fmt, ...);
+    void clear();
+};
+
+#endif

@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <display.hpp>
 
 #include "led_matrix_control.hpp"
 #include "button.hpp"
@@ -43,6 +44,7 @@ static Storage storage;
 static Button upButton("Up", PIND3);
 static Button downButton("Down", PIND2);
 static Button toggleButton("Toggle", PIND4);
+Display display;
 
 void setup()
 {
@@ -57,13 +59,16 @@ void setup()
     LOGGER.debug("Setting up led matrix controller");
     ledMatrixControl.configure();
     ledMatrixControl.begin();
-    
-    Animate().animate(ledMatrixControl.getMatrix());
+
+    // Animate().animate(ledMatrixControl.getMatrix());
 
     storage.loadMatrixFromMemory(ledMatrixControl.getMatrix());
     storage.loadCurrentDayFromMemory(currentMonth, currentDay);
 
     ledMatrixControl.getMatrix().snapshot();
+
+    LOGGER.debug("Setting up display");
+    display.configure();
 
     LOGGER.info("Setup: complete");
 }
@@ -120,7 +125,7 @@ void decrementCurrentDay(uint8_t &month, uint8_t &day)
 
 void reset()
 {
-    Animate().animate(ledMatrixControl.getMatrix());
+    // Animate().animate(ledMatrixControl.getMatrix());
     currentMonth = 0;
     currentDay = 0;
 
@@ -143,6 +148,12 @@ void changeState(State &state, State newState)
         STATE_NAME[state],
         STATE_NAME[newState]);
     state = newState;
+}
+
+void displayCurrentDate()
+{
+    static const char *MONTHS[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+    display.write("%s %02d", MONTHS[currentMonth], currentDay+1);
 }
 
 void loop()
@@ -200,6 +211,7 @@ void loop()
             if (toggleButtonState == ButtonState::PUSH)
             {
                 ledMatrixControl.getMatrix().toggle(currentMonth, currentDay);
+                displayCurrentDate();
                 lastMillis = millis();
             }
 
@@ -209,6 +221,7 @@ void loop()
                 LOGGER.info("Month=%d, Day=%d", currentMonth, currentDay);
                 storage.saveMatrixToMemory(ledMatrixControl.getMatrix());
                 storage.saveCurrentDayToMemory(currentMonth, currentDay);
+                displayCurrentDate();
                 changeState(state, State::IDLE);
             }
             break;
@@ -232,6 +245,7 @@ void loop()
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, false);
                 incrementCurrentDay(currentMonth, currentDay);
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, true);
+                displayCurrentDate();
             }
 
             if (downButtonState == ButtonState::PUSH)
@@ -239,6 +253,7 @@ void loop()
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, false);
                 decrementCurrentDay(currentMonth, currentDay);
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, true);
+                displayCurrentDate();
             }
 
             if (upButtonState == ButtonState::LONG_PUSH)
@@ -246,13 +261,15 @@ void loop()
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, false);
                 incrementCurrentMonth(currentMonth);
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, true);
-            }
+                displayCurrentDate();
+           }
 
             if (downButtonState == ButtonState::LONG_PUSH)
             {
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, false);
                 decrementCurrentMonth(currentMonth);
                 ledMatrixControl.getMatrix().set(currentMonth, currentDay, true);
+                displayCurrentDate();
             }
 
             if ((millis() - lastMillis) > STATE_REVERT_DELAY)
