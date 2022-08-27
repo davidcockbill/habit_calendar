@@ -30,7 +30,7 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x00000000,
     0x00000000,
     0x00000000,
-    0x00000006,
+    0x008aa006,
     0x00000000,
     0x00000000,
     0x00000000,
@@ -46,7 +46,7 @@ static Button toggleButton("Toggle", PIND4);
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     LOGGER.info("Setup: start");
 
     LOGGER.debug("Setting up buttons");
