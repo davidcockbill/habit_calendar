@@ -19,6 +19,7 @@ static const char *const STATE_NAME[] = { STATES };
 static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 static const uint8_t MAX_MONTH = 11;
 
+static const uint32_t STATE_IDLE_DELAY = 30000;
 static const uint32_t STATE_REVERT_DELAY = 1000;
 static const Logger LOGGER(Level::INFO);
 
@@ -31,7 +32,7 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x00000000,
     0x00000000,
     0x00000000,
-    0x008aa006,
+    0x048aa006,
     0x00000000,
     0x00000000,
     0x00000000,
@@ -170,6 +171,12 @@ void loop()
     switch (state)
     {
         case State::IDLE:
+            if ((millis() - lastMillis) > STATE_IDLE_DELAY)
+            {
+                display.clear();
+                lastMillis = millis();
+            }
+
             if (upButtonState == ButtonState::PUSH &&
                 toggleButtonState == ButtonState::ON)
             {
