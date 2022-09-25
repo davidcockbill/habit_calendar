@@ -5,7 +5,6 @@
 #include "button.hpp"
 #include "logging.hpp"
 #include "storage.hpp"
-#include "animate.hpp"
 
 
 #define STATES C(IDLE)C(TOGGLE)C(SELECT)C(RESET)
@@ -32,8 +31,8 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x00000000,
     0x00000000,
     0x00000000,
-    0x048aa006,
-    0x00000000,
+    0x248aa006,
+    0x00296a25,
     0x00000000,
     0x00000000,
     0x00000000};
@@ -61,7 +60,6 @@ void setup()
     ledMatrixControl.configure();
     ledMatrixControl.begin();
 
-    // Animate().animate(ledMatrixControl.getMatrix());
 
     storage.loadMatrixFromMemory(ledMatrixControl.getMatrix());
     storage.loadCurrentDayFromMemory(currentMonth, currentDay);
