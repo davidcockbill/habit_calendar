@@ -29,9 +29,9 @@ Testing:
 
 Note: You can see me trying to add numbers (31 in this case) to the panel lenses. I 3D printed the number on the inside of the lens, airbrushed black into the embossed number, then sandpapered the back to show the black inside the embossed number. I've given up on this as the results were poor.
 
-In light of the above, I need to work out a way of displaying the numbers. However, I like the idea of having no numbers or months, and showing the current selection on a little display, like [this](https://thepihut.com/products/0-91-oled-display-module):
+In light of the above, I need to work out a way of displaying the numbers. I liked the idea of having no numbers or months, and showing the current selection on a little display. In the end I used [this](https://thepihut.com/products/0-91-oled-display-module):
 
-This would sit next to the buttons.
+I had to cut a rectangular hole throught he front panel, and clamped the LCD in place with some 3d printed parts.
 
 ## Final Circuit
 
@@ -67,6 +67,7 @@ I: Shift register for days 17-24
 
 J: Shift register for days 25-32
 
+Note that I changed the position of the Arduino to the other side of the buttons. This was after I built the frame and discovered that I could not fit the USB cables in the left hand position. I used the existing holes in the back and extended a crazy long tab under the buttons. I think I prefer this to drilling more mounting holes in the back and having 2 unused holes.
 
 ## Matrix Build
 
@@ -141,4 +142,102 @@ Here is the prototype, along with bubble in the resin:
 
 ![prototype lens](./images/prototype_lens.jpg) 
 
-Need to get rid of bubbles in the resin for the 365 real versions!
+
+Well, I tried many ways of making the lenses, but none looked very good.
+
+In the end a diffuser (made of glow in the dark filament) was printed. See the final construction section to see this.
+
+
+## The Frame
+
+I bought a some ash from [here](https://www.surreytimbers.co.uk/product/ash-timber-thins/).
+
+I sawed a couple of strips off this and planed the sides parallel and square; ensuring both strips were of the same dimensions.
+
+I then used a small router table to cut rebates on both sides.
+
+Here is me checking the rebate depths on the calendar. Note each strip would be cut to produce a side and either a top or bottom:
+
+![making frame](./images/frame/making_frame_1.jpg)
+
+Close up of the rebates:
+
+![making frame](./images/frame/making_frame_2.jpg)
+
+The mitres didn't go quite as expected. I set up a 45 degree shooting board with some scrap plywood. This should have enabled me to get a perfect fit by taking thin shavings. However the endgrain of the ash was just so tough to cut (even with a resharpened lower angle on my low angle jack plane). In the end I used bit powered mitre saw. I spent ages ensuing that the cut was exacly 45 degrees. However, getting the accuracy for the part length was impossible. 
+
+Glued up with Titebond II, using masking tape to clamp. I placed the front panel in during glueup to ensure squareness.
+
+The mitres are by no means perfect, but not too bad when finished:
+
+![frame mitres](./images/frame/frame_mitres.jpg)
+
+The completed raw frame:
+
+![raw frame complete](./images/frame/raw_frame_complete.jpg) 
+
+Finished with a bit of sanding, 2 coats of danish oil, and the a waxing:
+
+![frame finishing](./images/frame/frame_finishing.jpg) 
+
+Test fitting:
+
+![frame test fit](./images/frame/frame_test_fit.jpg)
+
+... and a closeup:
+
+![frame test fit close](./images/frame/frame_test_fit_closeup.jpg)
+
+At this point I realise that I need to get power in. 
+
+I was going to use an old laptop power supply to power this, with a buck converter to ramp down to 5V. However, this would mean having to disassemble to get at the USB. Not good if I wanted to do some coding. I therefore opted to power via USB, and get it though the case using [this](https://thepihut.com/products/panel-mount-extension-usb-cable-mini-b-male-to-mini-b-female?variant=31955909073).
+
+Here is a prototype using an offcut from the ash strips:
+
+![usb prototype](./images/frame/usb_prototype.jpg) 
+
+## Final Assembly
+
+Exciting times as I put it all together for the first time.
+
+
+![final assembly 1](./images/final_assembly/final_assembly_1.jpg) 
+
+Note the funky arduino mounting in the bottom right.
+
+I didn't want to drill any more holes in the back plate so here you can see a tab from the arduino mount reaching right across the bottom of the box to where the original mounting holes are on the left. See also that I had to shift the whole thing towards the bottom of the calendar to ensure that the up button had clearance from the USB cable coming out of the arduino!
+
+It was tense drilling a 16mm hole through the frame. The result for the USB came out alright:
+
+![final assembly 2](./images/final_assembly/final_assembly_2.jpg)
+
+Did I mention that I ditched the front panel lenses, in favor of 3d printed diffuser sheets:
+
+
+![final assembly 3](./images/final_assembly/final_assembly_3.jpg)
+
+Both diffusers in place. There is raised bit on the back for each LED socket. The sheet locks into place and are held there purely by the front panel ensuring these raised bits are keyed into the LED socket:
+
+![final assembly 4](./images/final_assembly/final_assembly_4.jpg) 
+
+Buttons in place on front panel, about to insert I2C socket into the LED Panel at the top:
+
+![final assembly 5](./images/final_assembly/final_assembly_5.jpg) 
+
+## Finished
+
+Finally finished:
+
+![finished 1](./images/finished/finished_1.jpg) 
+
+
+.. and in operation. Note that it looks like the LEDs are not all lined up correclty. This is just the angle of the camera. When looking straight on, all LEDs line up in their respective holes.
+
+![finished 2](./images/finished/finished_2.jpg) 
+
+I have been using the calendar from when it was first operational. The days are showing my running days since August.
+
+Note that this is on maximum brightness. You can adjust the brightness by holding the select button and toggling either the up or down buttons.
+
+The currently selected date on the LED Panel also only shows when a button is pressed. It then turns off after a period of inactivity.
+

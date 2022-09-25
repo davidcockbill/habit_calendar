@@ -9,11 +9,11 @@ This is inspired by the
 
 Current state of play is this:
 
-![finally functional](./documentation/images/functional.jpg) 
+![finally functional](./documentation/images/finished/finished_2.jpg) 
 
-See how the calendar build is going [here](./documentation/README.md).
+See how the calendar was built, [here](./documentation/README.md).
 
-Fusion 360 models [here](./documentation/fusion360/README.md).
+Fusion 360 models, [here](./documentation/fusion360/README.md).
 
 ## Operation
 
@@ -23,7 +23,7 @@ Unlike Simone's Calendar there are only 3 buttons for control (cost and ease of 
 
 Press the toggle button and the currently selected LED is toggled. You can toggle this selection on/off as many times as you wish; but a certain time after the press if there is no more activity on the button, then the selection moves onto the next day (wrapping to the next month as appropriate).
 
-Unlike Simone's there will be a February the 29th; but as there is no external time/date sync, the user will have to skip this on non-leap years.
+Unlike Simone's there is a February the 29th; but as there is no external time/date sync, the user will have to skip this on non-leap years.
 
 In normal operation, each day the user can just press the toggle button to light the LED for the day. 
 
@@ -147,9 +147,9 @@ The loop() function reads the button states on each iteration and then goes thro
 
 ## Backlog
 
-- Document prototyping process.
-- Build proper hardware
 - Maybe create StateContext class to encapsulate buttons, current day/month, matrix and storage.
+- Space Invaders animate across LCD panel
+- Document parts and final cost
 
 
 
