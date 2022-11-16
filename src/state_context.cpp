@@ -139,6 +139,12 @@ void StateContext::idleState(ButtonState up, ButtonState down, ButtonState toggl
         changeState(State::TOGGLE);
     }
 
+    if (toggle == ButtonState::LONG_PUSH)
+    {
+        mLastMillis = millis();
+        displayCurrentDate();
+    }
+
     if (toggle != ButtonState::ON && (up == ButtonState::ON || 
         down == ButtonState::ON))
     {
