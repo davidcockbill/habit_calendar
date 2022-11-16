@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <display.hpp>
 
+#include "led_matrix_control.hpp"
+#include "storage.hpp"
+#include "button.hpp"
+
 #define STATES C(IDLE)C(TOGGLE)C(SELECT)C(RESET)
 #define C(x) x,
 enum State { STATES };
@@ -12,15 +16,6 @@ enum State { STATES };
 static const char *const STATE_NAME[] = { STATES };
 #undef C
 
-static const uint32_t STATE_IDLE_DELAY = 30000;
-static const uint32_t STATE_REVERT_DELAY = 1000;
-
-static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-static const uint8_t MAX_MONTH = 11;
-
-#include "led_matrix_control.hpp"
-#include "storage.hpp"
-#include "button.hpp"
 
 class StateContext
 {
@@ -40,14 +35,17 @@ public:
     StateContext();
 
     void begin();
-    void run(ButtonState upButtonState,
-             ButtonState downButtonState,
-             ButtonState toggleButtonState);
+    void run(ButtonState up, ButtonState down, ButtonState toggle);
 
 private:
     void changeState(State newState);
     void displayCurrentDate();
     void reset();
+
+    void idleState(ButtonState up, ButtonState down, ButtonState toggle);
+    void toggleState(ButtonState up, ButtonState down, ButtonState toggle);
+    void selectState(ButtonState up, ButtonState down, ButtonState toggle);
+    void resetState(ButtonState up, ButtonState down, ButtonState toggle);
 
     void incrementCurrentMonth();
     void incrementCurrentDay();

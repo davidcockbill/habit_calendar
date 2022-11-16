@@ -15,8 +15,14 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x248aa006,
     0x12a96a25,
     0x24a52929,
-    0x000000a1,
+    0x000050a1,
     0x00000000};
+
+static const uint32_t STATE_IDLE_DELAY = 30000;
+static const uint32_t STATE_REVERT_DELAY = 1000;
+
+static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static const uint8_t MAX_MONTH = 11;
 
 StateContext::StateContext():
     mState(State::IDLE),
@@ -41,139 +47,25 @@ void StateContext::begin()
     mDisplay.configure();
 }
 
-void StateContext::run(ButtonState upButtonState,
-                       ButtonState downButtonState,
-                       ButtonState toggleButtonState)
+void StateContext::run(ButtonState up, ButtonState down,  ButtonState toggle)
 {
 
     switch (mState)
     {
         case State::IDLE:
-            if ((millis() - mLastMillis) > STATE_IDLE_DELAY)
-            {
-                mDisplay.clear();
-                mLastMillis = millis();
-            }
-
-            if (upButtonState == ButtonState::PUSH &&
-                toggleButtonState == ButtonState::ON)
-            {
-                mLedMatrixControl.incrementBrightness();
-            }
-
-            if (downButtonState == ButtonState::PUSH &&
-                toggleButtonState == ButtonState::ON)
-            {
-                mLedMatrixControl.decrementBrightness();
-            }
-
-            if (downButtonState == ButtonState::ON &&
-                upButtonState == ButtonState::ON &&
-                toggleButtonState == ButtonState::ON)
-            {
-                changeState(State::RESET);
-            }
-
-            if (toggleButtonState == ButtonState::PUSH)
-            {
-                mLedMatrixControl.getMatrix().toggle(mCurrentMonth, mCurrentDay);
-                mLastMillis = millis();
-                changeState(State::TOGGLE);
-            }
-
-            if (toggleButtonState != ButtonState::ON && (upButtonState == ButtonState::ON || 
-                downButtonState == ButtonState::ON))
-            {
-                mMatrixSnapshot = mLedMatrixControl.getMatrix();
-                mLastMillis = millis();
-                mLedMatrixControl.getMatrix().clear();
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
-                changeState(State::SELECT);
-            }
+            idleState(up, down, toggle);
             break;
 
         case State::TOGGLE:
-            if (toggleButtonState == ButtonState::PUSH)
-            {
-                mLedMatrixControl.getMatrix().toggle(mCurrentMonth, mCurrentDay);
-                displayCurrentDate();
-                mLastMillis = millis();
-            }
-
-            if ((millis() - mLastMillis) > STATE_REVERT_DELAY)
-            {
-                incrementCurrentDay();
-                LOGGER.info("Month=%d, Day=%d", mCurrentMonth, mCurrentDay);
-                mStorage.saveMatrixToMemory(mLedMatrixControl.getMatrix());
-                mStorage.saveCurrentDayToMemory(mCurrentMonth, mCurrentDay);
-                displayCurrentDate();
-                changeState(State::IDLE);
-            }
+            toggleState(up, down, toggle);
             break;
 
         case State::SELECT:
-            if (downButtonState == ButtonState::ON &&
-                upButtonState == ButtonState::ON &&
-                toggleButtonState == ButtonState::ON)
-            {
-                changeState(State::RESET);
-            }
-
-            if (upButtonState != ButtonState::OFF ||
-                downButtonState != ButtonState::OFF)
-            {
-                mLastMillis = millis();
-            }
-
-            if (upButtonState == ButtonState::PUSH)
-            {
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
-                incrementCurrentDay();
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
-                displayCurrentDate();
-            }
-
-            if (downButtonState == ButtonState::PUSH)
-            {
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
-                decrementCurrentDay();
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
-                displayCurrentDate();
-            }
-
-            if (upButtonState == ButtonState::LONG_PUSH)
-            {
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
-                incrementCurrentMonth();
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
-                displayCurrentDate();
-           }
-
-            if (downButtonState == ButtonState::LONG_PUSH)
-            {
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
-                decrementCurrentMonth();
-                mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
-                displayCurrentDate();
-            }
-
-            if ((millis() - mLastMillis) > STATE_REVERT_DELAY)
-            {
-                mLedMatrixControl.getMatrix() = mMatrixSnapshot;
-                LOGGER.info("Month=%d, Day=%d", mCurrentMonth, mCurrentDay);
-                mStorage.saveCurrentDayToMemory(mCurrentMonth, mCurrentDay);
-                changeState(State::IDLE);
-            }
+            selectState(up, down, toggle);
             break;
 
         case State::RESET:
-            if (downButtonState == ButtonState::OFF &&
-                upButtonState == ButtonState::OFF &&
-                toggleButtonState == ButtonState::OFF)
-            {
-                reset();
-                changeState(State::IDLE);
-            }
+            resetState(up, down, toggle);
             break;
 
         default:
@@ -211,6 +103,138 @@ void StateContext::reset()
     
     mStorage.saveMatrixToMemory(mLedMatrixControl.getMatrix());
     mStorage.saveCurrentDayToMemory(mCurrentMonth, mCurrentDay);
+}
+
+void StateContext::idleState(ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if ((millis() - mLastMillis) > STATE_IDLE_DELAY)
+    {
+        mDisplay.clear();
+        mLastMillis = millis();
+    }
+
+    if (up == ButtonState::PUSH &&
+        toggle == ButtonState::ON)
+    {
+        mLedMatrixControl.incrementBrightness();
+    }
+
+    if (down == ButtonState::PUSH &&
+        toggle == ButtonState::ON)
+    {
+        mLedMatrixControl.decrementBrightness();
+    }
+
+    if (down == ButtonState::ON &&
+        up == ButtonState::ON &&
+        toggle == ButtonState::ON)
+    {
+        changeState(State::RESET);
+    }
+
+    if (toggle == ButtonState::PUSH)
+    {
+        mLedMatrixControl.getMatrix().toggle(mCurrentMonth, mCurrentDay);
+        mLastMillis = millis();
+        changeState(State::TOGGLE);
+    }
+
+    if (toggle != ButtonState::ON && (up == ButtonState::ON || 
+        down == ButtonState::ON))
+    {
+        mMatrixSnapshot = mLedMatrixControl.getMatrix();
+        mLastMillis = millis();
+        mLedMatrixControl.getMatrix().clear();
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
+        changeState(State::SELECT);
+    }
+}
+
+void StateContext::toggleState(ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (toggle == ButtonState::PUSH)
+    {
+        mLedMatrixControl.getMatrix().toggle(mCurrentMonth, mCurrentDay);
+        displayCurrentDate();
+        mLastMillis = millis();
+    }
+
+    if ((millis() - mLastMillis) > STATE_REVERT_DELAY)
+    {
+        incrementCurrentDay();
+        LOGGER.info("Month=%d, Day=%d", mCurrentMonth, mCurrentDay);
+        mStorage.saveMatrixToMemory(mLedMatrixControl.getMatrix());
+        mStorage.saveCurrentDayToMemory(mCurrentMonth, mCurrentDay);
+        displayCurrentDate();
+        changeState(State::IDLE);
+    }
+}
+
+void StateContext::selectState(ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (down == ButtonState::ON &&
+        up == ButtonState::ON &&
+        toggle == ButtonState::ON)
+    {
+        changeState(State::RESET);
+    }
+
+    if (up != ButtonState::OFF ||
+        down != ButtonState::OFF)
+    {
+        mLastMillis = millis();
+    }
+
+    if (up == ButtonState::PUSH)
+    {
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
+        incrementCurrentDay();
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
+        displayCurrentDate();
+    }
+
+    if (down == ButtonState::PUSH)
+    {
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
+        decrementCurrentDay();
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
+        displayCurrentDate();
+    }
+
+    if (up == ButtonState::LONG_PUSH)
+    {
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
+        incrementCurrentMonth();
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
+        displayCurrentDate();
+    }
+
+    if (down == ButtonState::LONG_PUSH)
+    {
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, false);
+        decrementCurrentMonth();
+        mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, true);
+        displayCurrentDate();
+    }
+
+    if ((millis() - mLastMillis) > STATE_REVERT_DELAY)
+    {
+        mLedMatrixControl.getMatrix() = mMatrixSnapshot;
+        LOGGER.info("Month=%d, Day=%d", mCurrentMonth, mCurrentDay);
+        mStorage.saveCurrentDayToMemory(mCurrentMonth, mCurrentDay);
+        changeState(State::IDLE);
+    }
+}
+
+void StateContext::resetState(ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (down == ButtonState::OFF &&
+        up == ButtonState::OFF &&
+        toggle == ButtonState::OFF)
+    {
+        reset();
+        changeState(State::IDLE);
+    }
 }
 
 void StateContext::incrementCurrentMonth()

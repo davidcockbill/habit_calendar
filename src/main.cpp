@@ -30,11 +30,11 @@ void setup()
 void loop()
 {
     uint32_t start = micros();
-    ButtonState upButtonState = upButton.getState();
-    ButtonState downButtonState = downButton.getState();
-    ButtonState toggleButtonState = toggleButton.getState();
 
-    stateContext.run(upButtonState, downButtonState, toggleButtonState);
+    ButtonState up = upButton.getState();
+    ButtonState down = downButton.getState();
+    ButtonState toggle = toggleButton.getState();
+    stateContext.run(up, down, toggle);
 
     uint32_t duration = micros() - start;
     LOGGER.trace("Loop completed in %dus", duration);
