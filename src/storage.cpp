@@ -3,8 +3,6 @@
 #include "logging.hpp"
 #include <EEPROM.h>
 
-static const Logger LOGGER(Level::INFO);
-
 static const int CURRENT_MONTH_IDX = 48;
 static const int CURRENT_DAY_IDX = 49;
 

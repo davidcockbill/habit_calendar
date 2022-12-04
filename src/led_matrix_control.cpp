@@ -5,7 +5,6 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-static const Logger LOGGER(Level::INFO);
 static const int SRCLK_PIN = 10;
 static const int OE_PIN = 9;
 static const uint8_t MAX_BRIGHTNESS = 254;

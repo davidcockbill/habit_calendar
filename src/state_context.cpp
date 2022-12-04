@@ -1,8 +1,6 @@
 #include "state_context.hpp"
 #include "logging.hpp"
 
-static const Logger LOGGER(Level::INFO);
-
 static const boolean RESTORE_SNAPSHOT_ON_RESET = false;
 static uint32_t MATRIX_SNAPSHOT[12] = {
     0x00000000,

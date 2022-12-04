@@ -19,7 +19,7 @@ void Display::write(const char *fmt, ...)
 {    
     va_list args;
     va_start(args, fmt);
-    char buffer[100];
+    char buffer[50];
 
     if ((uint32_t)vsnprintf(buffer, sizeof(buffer), fmt, args) <= sizeof(buffer))
     {

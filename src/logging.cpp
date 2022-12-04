@@ -1,9 +1,10 @@
+#include <Arduino.h>
 #include "logging.hpp"
 #include <Arduino.h>
 
 void println(const char *fmt, va_list args)
 {
-    char buffer[100];
+    char buffer[50];
     if ((uint32_t)vsnprintf(buffer, sizeof(buffer), fmt, args) <= sizeof(buffer))
     {
         Serial.println(buffer);

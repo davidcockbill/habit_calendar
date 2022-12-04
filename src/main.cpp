@@ -4,8 +4,6 @@
 #include "button.hpp"
 #include "logging.hpp"
 
-static const Logger LOGGER(Level::INFO);
-
 static StateContext stateContext;
 static Button upButton("Up", PIND3);
 static Button downButton("Down", PIND2);

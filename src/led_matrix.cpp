@@ -2,8 +2,6 @@
 #include "logging.hpp"
 #include <Arduino.h>
 
-static const Logger LOGGER(Level::INFO);
-
 
 LedMatrix::LedMatrix(): mMatrix{0}
 {
