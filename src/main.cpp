@@ -3,6 +3,7 @@
 #include "state_context.hpp"
 #include "button.hpp"
 #include "logging.hpp"
+#include "memory.hpp"
 
 static StateContext stateContext;
 static Button upButton("Up", PIND3);
@@ -11,6 +12,8 @@ static Button toggleButton("Toggle", PIND4);
 
 void setup()
 {
+    initialiseFreeRam();
+
     Serial.begin(115200);
     LOGGER.info("Setup: start");
 

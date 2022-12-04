@@ -1,5 +1,6 @@
 #include "state_context.hpp"
 #include "logging.hpp"
+#include "memory.hpp"
 
 static const boolean RESTORE_SNAPSHOT_ON_RESET = false;
 static uint32_t MATRIX_SNAPSHOT[12] = {
@@ -140,7 +141,15 @@ void StateContext::idleState(ButtonState up, ButtonState down, ButtonState toggl
     if (toggle == ButtonState::LONG_PUSH)
     {
         mLastMillis = millis();
-        displayCurrentDate();
+        int unusedRam = getUnusedRam();
+        if (unusedRam < 50)
+        {
+            mDisplay.write("%d", unusedRam);
+        }
+        else
+        {
+            displayCurrentDate();
+        }
     }
 
     if (toggle != ButtonState::ON && (up == ButtonState::ON || 

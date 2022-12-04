@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "logging.hpp"
-#include <Arduino.h>
+
 
 void println(const char *fmt, va_list args)
 {
