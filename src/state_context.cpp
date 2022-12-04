@@ -15,8 +15,8 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x248aa006,
     0x12a96a25,
     0x24a52929,
-    0x002550a1,
-    0x00000000};
+    0x252550a1,
+    0x00000002};
 
 static const uint32_t STATE_IDLE_DELAY = 30000;
 static const uint32_t STATE_REVERT_DELAY = 1000;
