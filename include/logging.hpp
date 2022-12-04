@@ -21,6 +21,6 @@ public:
     void trace(const char *fmt, ...) const;
 };
 
-static const Logger LOGGER(Level::DEBUG);
+static const Logger LOGGER(Level::INFO);
 
 #endif
