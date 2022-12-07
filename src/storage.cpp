@@ -24,7 +24,7 @@ void Storage::saveMatrixToMemory(LedMatrix matrix)
 
 void Storage::loadMatrixFromMemory(LedMatrix &matrix)
 {
-    LOGGER.info("Loading matrix");
+    LOGGER.info(F("Loading matrix"));
 
     for (uint8_t month = 0; month < 12; ++month)
     {

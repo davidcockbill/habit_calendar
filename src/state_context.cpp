@@ -33,7 +33,7 @@ StateContext::StateContext():
 
 void StateContext::begin()
 {
-    LOGGER.debug("Setting up led matrix controller");
+    LOGGER.debug(F("Setting up led matrix controller"));
     mLedMatrixControl.configure();
     mLedMatrixControl.begin();
 
@@ -42,13 +42,12 @@ void StateContext::begin()
 
     mLedMatrixControl.getMatrix().snapshot();
 
-    LOGGER.debug("Setting up display");
+    LOGGER.debug(F("Setting up display"));
     mDisplay.configure();
 }
 
 void StateContext::run(ButtonState up, ButtonState down,  ButtonState toggle)
 {
-
     switch (mState)
     {
         case State::IDLE:
@@ -255,7 +254,7 @@ void StateContext::incrementCurrentMonth()
     ++mCurrentMonth;
     if (mCurrentMonth > MAX_MONTH)
     {
-        LOGGER.debug("Month wrap");
+        LOGGER.debug(F("Month wrap"));
         mCurrentMonth = 0;
     }
 }
@@ -266,7 +265,7 @@ void StateContext::incrementCurrentDay()
     const uint32_t maxDay = DAYS_IN_MONTH[mCurrentMonth] - 1;
     if (mCurrentDay > maxDay)
     {
-        LOGGER.debug("Day wrap");
+        LOGGER.debug(F("Day wrap"));
         mCurrentDay = 0;
         incrementCurrentMonth();
     }
@@ -276,7 +275,7 @@ void StateContext::decrementCurrentMonth()
 {
     if (mCurrentMonth == 0)
     {
-        LOGGER.debug("Month wrap");
+        LOGGER.debug(F("Month wrap"));
         mCurrentMonth = MAX_MONTH;
     }
     else
@@ -289,7 +288,7 @@ void StateContext::decrementCurrentDay()
 {
     if (mCurrentDay == 0)
     {
-        LOGGER.debug("Day wrap");
+        LOGGER.debug(F("Day wrap"));
         decrementCurrentMonth();
         const uint32_t maxDay = DAYS_IN_MONTH[mCurrentMonth] - 1;
         mCurrentDay = maxDay;

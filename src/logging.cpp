@@ -75,3 +75,43 @@ void Logger::trace(const char *fmt, ...) const
     }
 }
 
+void Logger::error(const __FlashStringHelper *ifsh) const
+{
+    if (mLevel >= Level::ERROR)
+    {
+        Serial.println(ifsh);
+    }
+}
+
+void Logger::warn(const __FlashStringHelper *ifsh) const
+{
+    if (mLevel >= Level::WARN)
+    {
+        Serial.println(ifsh);
+    }
+}
+
+void Logger::info(const __FlashStringHelper *ifsh) const
+{
+    if (mLevel >= Level::INFO)
+    {
+        Serial.println(ifsh);
+    }
+}
+
+void Logger::debug(const __FlashStringHelper *ifsh) const
+{
+    if (mLevel >= Level::DEBUG)
+    {
+        Serial.println(ifsh);
+    }
+}
+
+void Logger::trace(const __FlashStringHelper *ifsh) const
+{
+    if (mLevel >= Level::TRACE)
+    {
+        Serial.println(ifsh);
+    }
+}
+

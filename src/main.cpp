@@ -15,17 +15,17 @@ void setup()
     initialiseFreeRam();
 
     Serial.begin(115200);
-    LOGGER.info("Setup: start");
+    LOGGER.info(F("Setup: start"));
 
-    LOGGER.debug("Setting up buttons");
+    LOGGER.debug(F("Setting up buttons"));
     upButton.setup();
     downButton.setup();
     toggleButton.setup();
 
-    LOGGER.debug("Setting State Machine");
+    LOGGER.debug(F("Setting State Machine"));
     stateContext.begin();
 
-    LOGGER.info("Setup: complete");
+    LOGGER.info(F("Setup: complete"));
 }
 
 void loop()
