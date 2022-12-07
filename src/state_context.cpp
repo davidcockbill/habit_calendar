@@ -19,6 +19,7 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
 
 static const uint32_t STATE_IDLE_DELAY = 30000;
 static const uint32_t STATE_REVERT_DELAY = 1000;
+static const uint32_t STATE_LONG_REVERT_DELAY = 5000;
 
 static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 static const uint8_t MAX_MONTH = 11;
@@ -66,6 +67,14 @@ void StateContext::run(ButtonState up, ButtonState down,  ButtonState toggle)
             resetState(up, down, toggle);
             break;
 
+         case State::DATE:
+            dateState(up, down, toggle);
+            break;
+
+        case State::RAM:
+            ramState(up, down, toggle);
+            break;
+
         default:
             break;
     }
@@ -83,6 +92,12 @@ void StateContext::displayCurrentDate()
 {
     static const char *MONTHS[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     mDisplay.write("%s %02d", MONTHS[mCurrentMonth], mCurrentDay+1);
+}
+
+void StateContext::displayUnusedRam()
+{
+    int unusedRam = getUnusedRam();
+    mDisplay.write("%d", unusedRam);
 }
 
 void StateContext::reset()
@@ -140,15 +155,8 @@ void StateContext::idleState(ButtonState up, ButtonState down, ButtonState toggl
     if (toggle == ButtonState::LONG_PUSH)
     {
         mLastMillis = millis();
-        int unusedRam = getUnusedRam();
-        if (unusedRam < 50)
-        {
-            mDisplay.write("%d", unusedRam);
-        }
-        else
-        {
-            displayCurrentDate();
-        }
+        displayCurrentDate();
+        changeState(State::DATE);
     }
 
     if (toggle != ButtonState::ON && (up == ButtonState::ON || 
@@ -245,6 +253,38 @@ void StateContext::resetState(ButtonState up, ButtonState down, ButtonState togg
         toggle == ButtonState::OFF)
     {
         reset();
+        changeState(State::IDLE);
+    }
+}
+
+void StateContext::dateState(ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (up == ButtonState::PUSH || down == ButtonState::PUSH)
+    {
+        mLastMillis = millis();
+        displayUnusedRam();
+        changeState(State::RAM);
+    }
+
+    if ((millis() - mLastMillis) > STATE_LONG_REVERT_DELAY)
+    {
+        displayCurrentDate();
+        changeState(State::IDLE);
+    }
+}
+
+void StateContext::ramState(ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (up == ButtonState::PUSH || down == ButtonState::PUSH)
+    {
+        mLastMillis = millis();
+        displayCurrentDate();
+        changeState(State::DATE);
+    }
+
+    if ((millis() - mLastMillis) > STATE_LONG_REVERT_DELAY)
+    {
+        displayCurrentDate();
         changeState(State::IDLE);
     }
 }

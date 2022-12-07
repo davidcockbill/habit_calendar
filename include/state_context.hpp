@@ -8,7 +8,7 @@
 #include "storage.hpp"
 #include "button.hpp"
 
-#define STATES C(IDLE)C(TOGGLE)C(SELECT)C(RESET)
+#define STATES C(IDLE)C(TOGGLE)C(SELECT)C(RESET)C(DATE)C(RAM)
 #define C(x) x,
 enum State { STATES };
 #undef C
@@ -40,12 +40,15 @@ public:
 private:
     void changeState(State newState);
     void displayCurrentDate();
+    void displayUnusedRam();
     void reset();
 
     void idleState(ButtonState up, ButtonState down, ButtonState toggle);
     void toggleState(ButtonState up, ButtonState down, ButtonState toggle);
     void selectState(ButtonState up, ButtonState down, ButtonState toggle);
     void resetState(ButtonState up, ButtonState down, ButtonState toggle);
+    void dateState(ButtonState up, ButtonState down, ButtonState toggle);
+    void ramState(ButtonState up, ButtonState down, ButtonState toggle);
 
     void incrementCurrentMonth();
     void incrementCurrentDay();
