@@ -97,7 +97,7 @@ void StateContext::displayCurrentDate()
 void StateContext::displayUnusedRam()
 {
     int unusedRam = getUnusedRam();
-    mDisplay.write("%d", unusedRam);
+    mDisplay.writeWithTitle("RAM:", "%d", unusedRam);
 }
 
 void StateContext::reset()

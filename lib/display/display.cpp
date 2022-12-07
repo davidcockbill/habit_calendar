@@ -3,6 +3,8 @@
 #include "GUI_Paint.h"
 #include <fonts.h>
 
+#define BUFFER_SIZE 50
+
 void Display::configure()
 {
     OLED_Init();
@@ -19,12 +21,28 @@ void Display::write(const char *fmt, ...)
 {    
     va_list args;
     va_start(args, fmt);
-    char buffer[50];
+    char buffer[BUFFER_SIZE];
 
     if ((uint32_t)vsnprintf(buffer, sizeof(buffer), fmt, args) <= sizeof(buffer))
     {
         Paint_Clear(BLACK);
         Paint_DrawString_EN(8, 8, buffer, &Font24, WHITE, WHITE);
+        OLED_Display(mImageCache);
+    }
+    va_end(args);
+}
+
+void Display::writeWithTitle(const char *title, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    char buffer[BUFFER_SIZE];
+
+    if ((uint32_t)vsnprintf(buffer, sizeof(buffer), fmt, args) <= sizeof(buffer))
+    {
+        Paint_Clear(BLACK);
+        Paint_DrawString_EN(8, 0, title, &Font16, WHITE, WHITE);
+        Paint_DrawString_EN(8, 16, buffer, &Font16, WHITE, WHITE);
         OLED_Display(mImageCache);
     }
     va_end(args);

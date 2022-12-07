@@ -12,6 +12,7 @@ public:
     void configure();
 
     void write(const char *fmt, ...);
+    void writeWithTitle(const char *title, const char *fmt, ...);
     void clear();
 };
 
