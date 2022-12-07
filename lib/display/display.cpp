@@ -42,7 +42,7 @@ void Display::writeWithTitle(const char *title, const char *fmt, ...)
     {
         Paint_Clear(BLACK);
         Paint_DrawString_EN(8, 0, title, &Font16, WHITE, WHITE);
-        Paint_DrawString_EN(8, 16, buffer, &Font16, WHITE, WHITE);
+        Paint_DrawString_EN(8, 16, buffer, &Font12, WHITE, WHITE);
         OLED_Display(mImageCache);
     }
     va_end(args);

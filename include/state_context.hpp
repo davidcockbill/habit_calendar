@@ -40,6 +40,7 @@ public:
 private:
     void changeState(State newState);
     void displayCurrentDate();
+    void displayCurrentDateWithTitle();
     void displayUnusedRam();
     void reset();
 
