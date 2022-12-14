@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
-#include "state_context.hpp"
+#include "state_machine.hpp"
 #include "button.hpp"
 #include "logging.hpp"
 #include "memory.hpp"
 
-static StateContext stateContext;
+static StateMachine stateMachine;
 static Button upButton("Up", PIND3);
 static Button downButton("Down", PIND2);
 static Button toggleButton("Toggle", PIND4);
@@ -22,8 +22,8 @@ void setup()
     downButton.setup();
     toggleButton.setup();
 
-    LOGGER.debug(F("Setting State Machine"));
-    stateContext.begin();
+    LOGGER.debug(F("Setting up State Machine"));
+    stateMachine.begin();
 
     LOGGER.info(F("Setup: complete"));
 }
@@ -35,7 +35,7 @@ void loop()
     ButtonState up = upButton.getState();
     ButtonState down = downButton.getState();
     ButtonState toggle = toggleButton.getState();
-    stateContext.run(up, down, toggle);
+    stateMachine.run(up, down, toggle);
 
     uint32_t duration = micros() - start;
     LOGGER.trace("Loop completed in %dus", duration);

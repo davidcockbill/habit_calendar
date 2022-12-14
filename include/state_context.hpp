@@ -7,24 +7,18 @@
 #include "led_matrix_control.hpp"
 #include "storage.hpp"
 #include "button.hpp"
+#include "states.hpp"
 
-#define STATES C(IDLE)C(TOGGLE)C(SELECT)C(RESET)C(DATE)C(RAM)
-#define C(x) x,
-enum State { STATES };
-#undef C
-#define C(x) #x,    
-static const char *const STATE_NAME[] = { STATES };
-#undef C
-
+class StateMachine;
 
 class StateContext
 {
 private:
+    StateMachine &mStateMachine;
     LedMatrixControl mLedMatrixControl;
     Storage mStorage;
     Display mDisplay;
 
-    State mState;
     uint8_t mCurrentMonth;
     uint8_t mCurrentDay;
 
@@ -32,25 +26,35 @@ private:
     LedMatrix mMatrixSnapshot;
 
 public:
-    StateContext();
+    StateContext(StateMachine &stateMachine);
 
     void begin();
-    void run(ButtonState up, ButtonState down, ButtonState toggle);
 
-private:
+    // State
     void changeState(State newState);
+    void restartTimer();
+    boolean timerExpired(uint32_t expiryTime);
+
+    // Storage
+    void store();
+
+    // Matrix
+	void incrementBrightness();
+	void decrementBrightness();
+    void toggle();
+    void setCurrentSelection(bool enable);
+    void clear();
+    void takeSnapshot();
+    void restoreSnapshot();
+    void reset();
+
+    // Display
+    void clearDisplay();
     void displayCurrentDate();
     void displayCurrentDateWithTitle();
     void displayUnusedRam();
-    void reset();
 
-    void idleState(ButtonState up, ButtonState down, ButtonState toggle);
-    void toggleState(ButtonState up, ButtonState down, ButtonState toggle);
-    void selectState(ButtonState up, ButtonState down, ButtonState toggle);
-    void resetState(ButtonState up, ButtonState down, ButtonState toggle);
-    void dateState(ButtonState up, ButtonState down, ButtonState toggle);
-    void ramState(ButtonState up, ButtonState down, ButtonState toggle);
-
+    // Current Selection
     void incrementCurrentMonth();
     void incrementCurrentDay();
     void decrementCurrentMonth();
