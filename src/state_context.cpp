@@ -144,6 +144,19 @@ void StateContext::displayUnusedRam()
     mDisplay.writeWithTitle("RAM:", "%d bytes", unusedRam);
 }
 
+void StateContext::displayMonthStats()
+{
+    uint8_t maxDay = DAYS_IN_MONTH[mCurrentMonth];
+    uint32_t bits = mLedMatrixControl.getMatrix().getDays(mCurrentMonth);
+    uint8_t days = 0;
+    while (bits)
+    {
+        days += bits & 1;
+        bits >>= 1;
+    }
+    mDisplay.writeWithTitle(MONTHS[mCurrentMonth], "%d/%d", days, maxDay);
+}
+
 void StateContext::incrementCurrentMonth()
 {
     ++mCurrentMonth;

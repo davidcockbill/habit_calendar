@@ -4,11 +4,13 @@
 #include "button.hpp"
 #include "logging.hpp"
 
-
+// State Names Definition
 #define STATE(x) #x,    
 static const char *const STATE_NAME[] = { STATE_TEMPLATE };
 #undef STATE
 
+
+// State Entry Table Definition
 #define STATE(x) void x ##_entry(StateContext&);   
 STATE_TEMPLATE
 #undef STATE
@@ -17,6 +19,8 @@ STATE_TEMPLATE
 void (* ENTRY_TABLE[])(StateContext&) = { STATE_TEMPLATE };
 #undef STATE
 
+
+// State Run Table Definition
 #define STATE(x) void x ##_run(StateContext&, ButtonState, ButtonState, ButtonState);   
 STATE_TEMPLATE
 #undef STATE
@@ -25,6 +29,8 @@ STATE_TEMPLATE
 void (* RUN_TABLE[])(StateContext&, ButtonState, ButtonState , ButtonState) = { STATE_TEMPLATE };
 #undef STATE
 
+
+// Constants
 static const uint32_t STATE_IDLE_DELAY = 30000;
 static const uint32_t STATE_REVERT_DELAY = 1000;
 static const uint32_t STATE_LONG_REVERT_DELAY = 5000;
@@ -223,6 +229,26 @@ void DATE_entry(StateContext &context)
 }
 
 void DATE_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (up == ButtonState::PUSH || down == ButtonState::PUSH)
+    {
+        context.changeState(State::MONTH);
+    }
+
+    if (context.timerExpired(STATE_LONG_REVERT_DELAY))
+    {
+        context.changeState(State::IDLE);
+    }
+}
+
+// MONTH State
+void MONTH_entry(StateContext &context)
+{
+    context.restartTimer();
+    context.displayMonthStats();
+}
+
+void MONTH_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
     if (up == ButtonState::PUSH || down == ButtonState::PUSH)
     {

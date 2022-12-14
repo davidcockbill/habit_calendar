@@ -53,6 +53,7 @@ public:
     void displayCurrentDate();
     void displayCurrentDateWithTitle();
     void displayUnusedRam();
+    void displayMonthStats();
 
     // Current Selection
     void incrementCurrentMonth();
