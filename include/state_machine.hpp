@@ -3,7 +3,7 @@
 
 #include "button.hpp"
 #include "state_context.hpp"
-#include "states.hpp"
+#include "state.hpp"
 
 
 class StateMachine

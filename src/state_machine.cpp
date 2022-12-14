@@ -1,30 +1,29 @@
 #include "state_machine.hpp"
-#include "states.hpp"
+#include "state.hpp"
 #include "state_context.hpp"
 #include "button.hpp"
 #include "logging.hpp"
 
 
-#define C(x) #x,    
-static const char *const STATE_NAME[] = { STATES };
-#undef C
+#define STATE(x) #x,    
+static const char *const STATE_NAME[] = { STATE_TEMPLATE };
+#undef STATE
 
-#define C(x) void x ##_entry(StateContext&);   
-STATES
-#undef C
+#define STATE(x) void x ##_entry(StateContext&);   
+STATE_TEMPLATE
+#undef STATE
 
-#define C(x) x ##_entry,    
-void (* ENTRY_TABLE[])(StateContext&) = { STATES };
-#undef C
+#define STATE(x) x ##_entry,    
+void (* ENTRY_TABLE[])(StateContext&) = { STATE_TEMPLATE };
+#undef STATE
 
+#define STATE(x) void x ##_run(StateContext&, ButtonState, ButtonState, ButtonState);   
+STATE_TEMPLATE
+#undef STATE
 
-#define C(x) void x ##_state(StateContext&, ButtonState, ButtonState, ButtonState);   
-STATES
-#undef C
-
-#define C(x) x ##_state,    
-void (* RUN_TABLE[])(StateContext&, ButtonState, ButtonState , ButtonState) = { STATES };
-#undef C
+#define STATE(x) x ##_run,    
+void (* RUN_TABLE[])(StateContext&, ButtonState, ButtonState , ButtonState) = { STATE_TEMPLATE };
+#undef STATE
 
 static const uint32_t STATE_IDLE_DELAY = 30000;
 static const uint32_t STATE_REVERT_DELAY = 1000;
@@ -61,12 +60,14 @@ void StateMachine::changeState(State newState)
     enter();
 }
 
-// IDLE STATE
+// IDLE State
 void IDLE_entry(StateContext &context)
 {
+    context.displayCurrentDate();
+    context.restartTimer();
 }
 
-void IDLE_state(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+void IDLE_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
     if (context.timerExpired(STATE_IDLE_DELAY))
     {
@@ -95,35 +96,29 @@ void IDLE_state(StateContext &context, ButtonState up, ButtonState down, ButtonS
 
     if (toggle == ButtonState::PUSH)
     {
-        context.toggle();
-        context.restartTimer();
         context.changeState(State::TOGGLE);
     }
 
     if (toggle == ButtonState::LONG_PUSH)
     {
-        context.restartTimer();
-        context.displayCurrentDateWithTitle();
         context.changeState(State::DATE);
     }
 
     if (toggle != ButtonState::ON && (up == ButtonState::ON || 
         down == ButtonState::ON))
     {
-        context.takeSnapshot();
-        context.restartTimer();
-        context.clear();
-        context.setCurrentSelection(true);
         context.changeState(State::SELECT);
     }
 }
 
-// TOGGLE STATE
+// TOGGLE State
 void TOGGLE_entry(StateContext &context)
 {
+    context.toggle();
+    context.restartTimer();
 }
 
-void TOGGLE_state(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+void TOGGLE_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
     if (toggle == ButtonState::PUSH)
     {
@@ -141,12 +136,16 @@ void TOGGLE_state(StateContext &context, ButtonState up, ButtonState down, Butto
     }
 }
 
-// SELECT STATE
+// SELECT State
 void SELECT_entry(StateContext &context)
 {
+    context.takeSnapshot();
+    context.restartTimer();
+    context.clear();
+    context.setCurrentSelection(true);
 }
 
-void SELECT_state(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+void SELECT_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
     if (down == ButtonState::ON &&
         up == ButtonState::ON &&
@@ -200,12 +199,12 @@ void SELECT_state(StateContext &context, ButtonState up, ButtonState down, Butto
     }
 }
 
-// RESET STATE
+// RESET State
 void RESET_entry(StateContext &context)
 {
 }
 
-void RESET_state(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+void RESET_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
     if (down == ButtonState::OFF &&
         up == ButtonState::OFF &&
@@ -216,44 +215,42 @@ void RESET_state(StateContext &context, ButtonState up, ButtonState down, Button
     }
 }
 
-// DATE STATE
+// DATE State
 void DATE_entry(StateContext &context)
 {
+    context.restartTimer();
+    context.displayCurrentDateWithTitle();
 }
 
-void DATE_state(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+void DATE_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
     if (up == ButtonState::PUSH || down == ButtonState::PUSH)
     {
-        context.restartTimer();
-        context.displayUnusedRam();
         context.changeState(State::RAM);
     }
 
     if (context.timerExpired(STATE_LONG_REVERT_DELAY))
     {
-        context.displayCurrentDate();
         context.changeState(State::IDLE);
     }
 }
 
-// RAM STATE
+// RAM State
 void RAM_entry(StateContext &context)
 {
+    context.restartTimer();
+    context.displayUnusedRam();
 }
 
-void RAM_state(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+void RAM_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
     if (up == ButtonState::PUSH || down == ButtonState::PUSH)
     {
-        context.restartTimer();
-        context.displayCurrentDateWithTitle();
         context.changeState(State::DATE);
     }
 
     if (context.timerExpired(STATE_LONG_REVERT_DELAY))
     {
-        context.displayCurrentDate();
         context.changeState(State::IDLE);
     }
 }

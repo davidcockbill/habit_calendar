@@ -7,7 +7,7 @@
 #include "led_matrix_control.hpp"
 #include "storage.hpp"
 #include "button.hpp"
-#include "states.hpp"
+#include "state.hpp"
 
 class StateMachine;
 
