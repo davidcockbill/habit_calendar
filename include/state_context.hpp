@@ -22,7 +22,6 @@ private:
     uint8_t mCurrentMonth;
     uint8_t mCurrentDay;
 
-    uint32_t mLastMillis;
     LedMatrix mMatrixSnapshot;
 
 public:
@@ -32,8 +31,7 @@ public:
 
     // State
     void changeState(State newState);
-    void restartTimer();
-    boolean timerExpired(uint32_t expiryTime);
+    void startTimer(uint32_t duration);
 
     // Storage
     void store();

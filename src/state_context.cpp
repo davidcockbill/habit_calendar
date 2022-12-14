@@ -26,8 +26,7 @@ static const uint8_t MAX_MONTH = 11;
 StateContext::StateContext(StateMachine &stateMachine):
     mStateMachine(stateMachine),
     mCurrentMonth(0),
-    mCurrentDay(0),
-    mLastMillis(millis())
+    mCurrentDay(0)
 {
 }
 
@@ -51,14 +50,9 @@ void StateContext::changeState(State newState)
     mStateMachine.changeState(newState);
 }
 
-void StateContext::restartTimer()
+void StateContext::startTimer(uint32_t duration)
 {
-    mLastMillis = millis();
-}
-
-boolean StateContext::timerExpired(uint32_t expiryTime)
-{
-    return ((millis() - mLastMillis) > expiryTime);
+    mStateMachine.startTimer(duration);
 }
 
 void StateContext::store()
