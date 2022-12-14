@@ -21,10 +21,6 @@ public:
     void run(ButtonState up, ButtonState down, ButtonState toggle);
     void changeState(State newState);
     void startTimer(uint32_t duration);
-
-private:
-    void stopTimer();
-    bool timerExpired();
 };
 
 #endif
