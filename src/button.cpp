@@ -2,9 +2,9 @@
 #include "logging.hpp"
 #include <Arduino.h>
 
-#define C(x) #x,    
-static const char *const BUTTON_STATE_NAME[] = { BUTTON_STATES };
-#undef C
+#define STATE(x) #x,    
+static const char *const BUTTON_STATE_NAME[] = { BUTTON_STATE_TEMPLATE };
+#undef STATE
 
 static const uint32_t DEBOUNCE_DELAY = 5;
 static const uint32_t LONG_PUSH_DELAY = 250;
