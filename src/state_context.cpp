@@ -75,11 +75,11 @@ void StateContext::decrementBrightness()
 void StateContext::toggle()
 {
     mLedMatrixControl.getMatrix().toggle(mCurrentMonth, mCurrentDay);
+    displayCurrentDate();
 }
 
 void StateContext::setCurrentSelection(bool enable)
 {
-
     mLedMatrixControl.getMatrix().set(mCurrentMonth, mCurrentDay, enable);
 }
 
@@ -159,6 +159,7 @@ void StateContext::incrementCurrentMonth()
         LOGGER.debug(F("Month wrap"));
         mCurrentMonth = 0;
     }
+    displayCurrentDate();
 }
 
 void StateContext::incrementCurrentDay()
@@ -171,6 +172,7 @@ void StateContext::incrementCurrentDay()
         mCurrentDay = 0;
         incrementCurrentMonth();
     }
+    displayCurrentDate();
 }
 
 void StateContext::decrementCurrentMonth()
@@ -184,6 +186,7 @@ void StateContext::decrementCurrentMonth()
     {
         --mCurrentMonth;
     }
+    displayCurrentDate();
 }
 
 void StateContext::decrementCurrentDay()
@@ -199,4 +202,5 @@ void StateContext::decrementCurrentDay()
     {
         --mCurrentDay;
     }
+    displayCurrentDate();
 }

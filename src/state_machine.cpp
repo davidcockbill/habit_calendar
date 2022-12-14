@@ -147,7 +147,6 @@ void TOGGLE_run(StateContext &context, ButtonState up, ButtonState down, ButtonS
     if (toggle == ButtonState::PUSH)
     {
         context.toggle();
-        context.displayCurrentDate(); //////////////////////////////////// Move into toggle
         context.startTimer(STATE_REVERT_DELAY);
     }
 }
@@ -189,7 +188,6 @@ void SELECT_run(StateContext &context, ButtonState up, ButtonState down, ButtonS
         context.setCurrentSelection(false);
         context.incrementCurrentDay();
         context.setCurrentSelection(true);
-        context.displayCurrentDate();
     }
 
     if (down == ButtonState::PUSH)
@@ -197,7 +195,6 @@ void SELECT_run(StateContext &context, ButtonState up, ButtonState down, ButtonS
         context.setCurrentSelection(false);
         context.decrementCurrentDay();
         context.setCurrentSelection(true);
-        context.displayCurrentDate();
     }
 
     if (up == ButtonState::LONG_PUSH)
@@ -205,7 +202,6 @@ void SELECT_run(StateContext &context, ButtonState up, ButtonState down, ButtonS
         context.setCurrentSelection(false);
         context.incrementCurrentMonth();
         context.setCurrentSelection(true);
-        context.displayCurrentDate();
     }
 
     if (down == ButtonState::LONG_PUSH)
@@ -213,7 +209,6 @@ void SELECT_run(StateContext &context, ButtonState up, ButtonState down, ButtonS
         context.setCurrentSelection(false);
         context.decrementCurrentMonth();
         context.setCurrentSelection(true);
-        context.displayCurrentDate();
     }
 }
 
