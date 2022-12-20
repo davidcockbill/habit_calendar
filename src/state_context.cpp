@@ -17,7 +17,7 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x12a96a25,
     0x24a52929,
     0x252550a1,
-    0x00001052};
+    0x00055052};
 
 static const char *MONTHS[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
