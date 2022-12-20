@@ -88,18 +88,6 @@ void StateContext::clear()
     mLedMatrixControl.getMatrix().clear();
 }
 
-void StateContext::takeSnapshot()
-{
-    mMatrixSnapshot = mLedMatrixControl.getMatrix();
-}
-
-void StateContext::restoreSnapshot()
-{
-    mLedMatrixControl.getMatrix() = mMatrixSnapshot;
-    LOGGER.info("Month=%d, Day=%d", mCurrentMonth, mCurrentDay);
-    mStorage.saveCurrentDayToMemory(mCurrentMonth, mCurrentDay);
-}
-
 void StateContext::reset()
 {
     mCurrentMonth = 0;
@@ -115,6 +103,18 @@ void StateContext::reset()
     }
     
     store();
+}
+
+void StateContext::takeSnapshot()
+{
+    mMatrixSnapshot = mLedMatrixControl.getMatrix();
+}
+
+void StateContext::restoreSnapshot()
+{
+    mLedMatrixControl.getMatrix() = mMatrixSnapshot;
+    LOGGER.info("Month=%d, Day=%d", mCurrentMonth, mCurrentDay);
+    mStorage.saveCurrentDayToMemory(mCurrentMonth, mCurrentDay);
 }
 
 void StateContext::clearDisplay()

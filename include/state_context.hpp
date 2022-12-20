@@ -42,9 +42,11 @@ public:
     void toggle();
     void setCurrentSelection(bool enable);
     void clear();
+    void reset();
+
+    // Snapshot
     void takeSnapshot();
     void restoreSnapshot();
-    void reset();
 
     // Display
     void clearDisplay();

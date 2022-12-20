@@ -160,16 +160,31 @@ void TOGGLE_timeout(StateContext &context)
 
 
 // SELECT State
+static boolean flashState = true;
+static uint32_t flashTimer = millis();
+void restartFlashTimer(StateContext &context)
+{
+    flashState = true;
+    flashTimer = millis(); 
+    context.setCurrentSelection(flashState);
+}
+
 void SELECT_entry(StateContext &context)
 {
     context.takeSnapshot();
-    context.clear();
-    context.setCurrentSelection(true);
     context.startTimer(STATE_REVERT_DELAY);
+    restartFlashTimer(context);
 }
 
 void SELECT_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
 {
+    if (millis() > flashTimer + 100)
+    {
+        flashState = !flashState;  
+        flashTimer = millis(); 
+        context.setCurrentSelection(flashState);
+    }
+
     if (down == ButtonState::ON &&
         up == ButtonState::ON &&
         toggle == ButtonState::ON)
@@ -185,30 +200,30 @@ void SELECT_run(StateContext &context, ButtonState up, ButtonState down, ButtonS
 
     if (up == ButtonState::PUSH)
     {
-        context.setCurrentSelection(false);
+        context.restoreSnapshot();
         context.incrementCurrentDay();
-        context.setCurrentSelection(true);
+        restartFlashTimer(context);
     }
 
     if (down == ButtonState::PUSH)
     {
-        context.setCurrentSelection(false);
+        context.restoreSnapshot();
         context.decrementCurrentDay();
-        context.setCurrentSelection(true);
+        restartFlashTimer(context);
     }
 
     if (up == ButtonState::LONG_PUSH)
     {
-        context.setCurrentSelection(false);
+        context.restoreSnapshot();
         context.incrementCurrentMonth();
-        context.setCurrentSelection(true);
+        restartFlashTimer(context);
     }
 
     if (down == ButtonState::LONG_PUSH)
     {
-        context.setCurrentSelection(false);
+        context.restoreSnapshot();
         context.decrementCurrentMonth();
-        context.setCurrentSelection(true);
+        restartFlashTimer(context);
     }
 }
 
