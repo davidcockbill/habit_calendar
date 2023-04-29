@@ -77,6 +77,11 @@ void LedMatrixControl::decrementBrightness()
     }
 }
 
+uint8_t LedMatrixControl::getBrightnessLevel()
+{
+    return brightness_idx;
+}
+
 ISR(TIMER2_COMPA_vect)
 {
     digitalWrite(OE_PIN, LOW); // Enable

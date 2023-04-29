@@ -52,6 +52,7 @@ public:
     void clearDisplay();
     void displayCurrentDate();
     void displayCurrentDateWithTitle();
+    void displayBrightnessLevel();
     void displayUnusedRam();
     void displayMonthStats();
 

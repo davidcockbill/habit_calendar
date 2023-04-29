@@ -6,10 +6,10 @@
 
 static const boolean RESTORE_SNAPSHOT_ON_RESET = false;
 static uint32_t MATRIX_SNAPSHOT[12] = {
-    0x00000000,
-    0x00000000,
-    0x00000000,
-    0x00000000,
+    0x5529462a,
+    0x0a2a1294,
+    0x52548a44,
+    0x000a2912,
     0x00000000,
     0x00000000,
     0x00000000,
@@ -17,7 +17,7 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x12a96a25,
     0x24a52929,
     0x252550a1,
-    0x00055052};
+    0x24255052};
 
 static const char *MONTHS[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 static const uint8_t DAYS_IN_MONTH[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -130,6 +130,11 @@ void StateContext::displayCurrentDate()
 void StateContext::displayCurrentDateWithTitle()
 {
     mDisplay.writeWithTitle("Date:", "%s %02d", MONTHS[mCurrentMonth], mCurrentDay+1);
+}
+
+void StateContext::displayBrightnessLevel()
+{
+    mDisplay.write("%02d", mLedMatrixControl.getBrightnessLevel());
 }
 
 void StateContext::displayUnusedRam()

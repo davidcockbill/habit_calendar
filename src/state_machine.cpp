@@ -97,12 +97,14 @@ void IDLE_run(StateContext &context, ButtonState up, ButtonState down, ButtonSta
         toggle == ButtonState::ON)
     {
         context.incrementBrightness();
+        context.changeState(State::BRIGHT);
     }
 
     if (down == ButtonState::PUSH &&
         toggle == ButtonState::ON)
     {
         context.decrementBrightness();
+        context.changeState(State::BRIGHT);
     }
 
     if (down == ButtonState::ON &&
@@ -234,6 +236,36 @@ void SELECT_timeout(StateContext &context)
 }
 
 
+// BRIGHT State
+void BRIGHT_entry(StateContext &context)
+{
+    context.displayBrightnessLevel();
+    context.startTimer(STATE_LONG_REVERT_DELAY);
+}
+
+void BRIGHT_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (up == ButtonState::PUSH &&
+        toggle == ButtonState::ON)
+    {
+        context.incrementBrightness();
+        context.displayBrightnessLevel();
+    }
+
+    if (down == ButtonState::PUSH &&
+        toggle == ButtonState::ON)
+    {
+        context.decrementBrightness();
+        context.displayBrightnessLevel();
+    }
+}
+
+void BRIGHT_timeout(StateContext &context)
+{
+    context.changeState(State::IDLE);
+}
+
+
 // RESET State
 void RESET_entry(StateContext &context)
 {
@@ -252,6 +284,7 @@ void RESET_run(StateContext &context, ButtonState up, ButtonState down, ButtonSt
 
 void RESET_timeout(StateContext &context)
 {
+    context.changeState(State::IDLE);
 }
 
 

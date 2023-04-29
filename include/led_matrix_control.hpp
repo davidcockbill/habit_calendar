@@ -15,6 +15,7 @@ public:
 	
 	void incrementBrightness();
 	void decrementBrightness();
+	uint8_t getBrightnessLevel();
 };
 
 #endif
