@@ -9,7 +9,7 @@ This is inspired by the
 
 Current state of play is this:
 
-![finally functional](./documentation/images/finished/finished_2.jpg) 
+![finally functional](./documentation/images/finished/new_look.jpg) 
 
 See how the calendar was built, [here](./documentation/README.md).
 
