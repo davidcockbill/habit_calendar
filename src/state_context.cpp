@@ -167,6 +167,11 @@ void StateContext::displayResetMonth()
     mDisplay.writeWithTitle("Reset:", "%s?", MONTHS[mCurrentMonth]);
 }
 
+void StateContext::displayReset()
+{
+    mDisplay.writeWithTitle("Reset:", "All?");
+}
+
 void StateContext::incrementCurrentMonth()
 {
     ++mCurrentMonth;

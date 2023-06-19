@@ -57,7 +57,7 @@ public:
     void displayUnusedRam();
     void displayMonthStats();
     void displayResetMonth();
-
+    void displayReset();
 
     // Current Selection
     void incrementCurrentMonth();

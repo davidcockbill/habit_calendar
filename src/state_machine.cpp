@@ -111,17 +111,12 @@ void IDLE_run(StateContext &context, ButtonState up, ButtonState down, ButtonSta
         up == ButtonState::ON &&
         toggle == ButtonState::ON)
     {
-        context.changeState(State::RESET);
+        context.changeState(State::DATE);
     }
 
     if (toggle == ButtonState::PUSH)
     {
         context.changeState(State::TOGGLE);
-    }
-
-    if (toggle == ButtonState::LONG_PUSH)
-    {
-        context.changeState(State::DATE);
     }
 
     if (toggle != ButtonState::ON && (up == ButtonState::ON || 
@@ -266,28 +261,6 @@ void BRIGHT_timeout(StateContext &context)
 }
 
 
-// RESET State
-void RESET_entry(StateContext &context)
-{
-}
-
-void RESET_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
-{
-    if (down == ButtonState::OFF &&
-        up == ButtonState::OFF &&
-        toggle == ButtonState::OFF)
-    {
-        context.reset();
-        context.changeState(State::IDLE);
-    }
-}
-
-void RESET_timeout(StateContext &context)
-{
-    context.changeState(State::IDLE);
-}
-
-
 // DATE State
 void DATE_entry(StateContext &context)
 {
@@ -361,7 +334,7 @@ void RESET_MONTH_run(StateContext &context, ButtonState up, ButtonState down, Bu
 {
     if (up == ButtonState::PUSH || down == ButtonState::PUSH)
     {
-        context.changeState(State::DATE);
+        context.changeState(State::RESET);
     }
         
     if (toggle == ButtonState::PUSH)
@@ -372,6 +345,32 @@ void RESET_MONTH_run(StateContext &context, ButtonState up, ButtonState down, Bu
 }
 
 void RESET_MONTH_timeout(StateContext &context)
+{
+    context.changeState(State::IDLE);
+}
+
+// RESET State
+void RESET_entry(StateContext &context)
+{
+    context.startTimer(STATE_LONG_REVERT_DELAY);
+    context.displayReset();
+}
+
+void RESET_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (up == ButtonState::PUSH || down == ButtonState::PUSH)
+    {
+        context.changeState(State::DATE);
+    }
+
+    if (toggle == ButtonState::PUSH)
+    {
+        context.reset();
+        context.changeState(State::IDLE);
+    }
+}
+
+void RESET_timeout(StateContext &context)
 {
     context.changeState(State::IDLE);
 }
