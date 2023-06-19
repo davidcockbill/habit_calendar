@@ -341,11 +341,37 @@ void RAM_run(StateContext &context, ButtonState up, ButtonState down, ButtonStat
 {
     if (up == ButtonState::PUSH || down == ButtonState::PUSH)
     {
-        context.changeState(State::DATE);
+        context.changeState(State::RESET_MONTH);
     }
 }
 
 void RAM_timeout(StateContext &context)
+{
+    context.changeState(State::IDLE);
+}
+
+// RESET_MONTH State
+void RESET_MONTH_entry(StateContext &context)
+{
+    context.startTimer(STATE_LONG_REVERT_DELAY);
+    context.displayResetMonth();
+}
+
+void RESET_MONTH_run(StateContext &context, ButtonState up, ButtonState down, ButtonState toggle)
+{
+    if (up == ButtonState::PUSH || down == ButtonState::PUSH)
+    {
+        context.changeState(State::DATE);
+    }
+        
+    if (toggle == ButtonState::PUSH)
+    {
+        context.resetCurrentMonth();
+        context.changeState(State::IDLE);
+    }
+}
+
+void RESET_MONTH_timeout(StateContext &context)
 {
     context.changeState(State::IDLE);
 }

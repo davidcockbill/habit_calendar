@@ -43,6 +43,7 @@ public:
     void setCurrentSelection(bool enable);
     void clear();
     void reset();
+    void resetCurrentMonth();
 
     // Snapshot
     void takeSnapshot();
@@ -55,6 +56,8 @@ public:
     void displayBrightnessLevel();
     void displayUnusedRam();
     void displayMonthStats();
+    void displayResetMonth();
+
 
     // Current Selection
     void incrementCurrentMonth();

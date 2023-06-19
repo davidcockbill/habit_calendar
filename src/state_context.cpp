@@ -11,7 +11,7 @@ static uint32_t MATRIX_SNAPSHOT[12] = {
     0x52548a44,
     0x000a2912,
     0x02a12910,
-    0x00002822,
+    0x0004a822,
     0x00000000,
     0x248aa006,
     0x12a96a25,
@@ -105,6 +105,12 @@ void StateContext::reset()
     store();
 }
 
+void StateContext::resetCurrentMonth()
+{
+    mLedMatrixControl.getMatrix().setDays(mCurrentMonth, 0);    
+    store();
+}
+
 void StateContext::takeSnapshot()
 {
     mMatrixSnapshot = mLedMatrixControl.getMatrix();
@@ -154,6 +160,11 @@ void StateContext::displayMonthStats()
         bits >>= 1;
     }
     mDisplay.writeWithTitle(MONTHS[mCurrentMonth], "%d/%d", days, maxDay);
+}
+
+void StateContext::displayResetMonth()
+{
+    mDisplay.writeWithTitle("Reset:", "%s?", MONTHS[mCurrentMonth]);
 }
 
 void StateContext::incrementCurrentMonth()
